@@ -13,6 +13,7 @@ pub struct ActivityOutput{
 }
 */
 
+
 // Developer Code
 #[activity()]
 pub fn start_my_simple_activity(activity_input: ActivityInput) -> Result<ActivityOutput, String> {
