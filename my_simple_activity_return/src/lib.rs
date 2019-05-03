@@ -1,26 +1,24 @@
 // Developer Code
-use serde_json::value::Value;
-use serde_json::map::Map;
+use dovetail_derive::activity;
 
 
-// Developer Code
-//#[dovetail_activity("input")]
+/*// Generated Code
 pub struct ActivityInput {
   pub message: String,
   pub status: i64,
 }
 
-//#[dovetail_activity("output")]
+// Generated Code
 pub struct ActivityOutput{
 }
+*/
 
 // Developer Code
-//#[dovetail_activity("callback")]
+#[activity()]
 pub fn start_my_simple_activity_return(activity_input: ActivityInput) -> Result<ActivityOutput, String>{
   println!("Inside start_my_simple_activity_return");
-  let msg = format!("Logging the message {}", &activity_input.message);
-  println!("{}", msg);
-  Ok(ActivityOutput{message: msg})
+  let msg = format!("Logging the message {} and status {}", &activity_input.message, &activity_input.status);
+  Ok(ActivityOutput{})
 }
 
 #[cfg(test)]
@@ -29,8 +27,8 @@ mod tests {
     #[test]
     fn test_my_simple_activity() {
       // Preparing mock Activity Input
-      let activity_input = ActivityInput{message: String::from("Test Activity Input")};
-      let res = start_my_simple_activity(activity_input);
-      assert_eq!("Logging the message Test Activity Input", res.unwrap().message);
+      let activity_input = ActivityInput{message: String::from("Test Activity Input"), status: 200};
+      let res = start_my_simple_activity_return(activity_input);
+      assert_eq!(res.is_ok(), true);
     }
 }
