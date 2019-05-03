@@ -8,37 +8,31 @@ extern crate proc_macro2;
 extern crate quote;
 
 use proc_macro::TokenStream;
-/*use darling_core::FromMeta;
-extern crate serde;
-extern crate serde_json;
-extern crate syn;
-extern crate app;
-extern crate dovetail_trigger_macro_derive;
-
-use dovetail_trigger_macro_derive::DovetailTriggers;
-use quote::quote;
-use std::error::Error;
-use std::fs::File;
-use std::io::BufReader;
-use app::App;
-use app::id::IdParser;
-use proc_macro2::{Ident, Span};
-*/
 
 mod activity;
-
-use syn::{parse_macro_input, DeriveInput, Error};
+mod environment;
+mod flow;
 
 #[proc_macro_attribute]
 pub fn activity(attr: TokenStream, input: TokenStream) -> TokenStream {
-    //let attr = parse_macro_input!(attr as DeriveInput);
-    //let input = parse_macro_input!(input as DeriveInput);
     activity::expand_activity(attr, input)
         .unwrap_or_else(to_compile_errors)
         .into()
-    
+}
 
-    /*
+#[proc_macro_attribute]
+pub fn flow(attr: TokenStream, input: TokenStream) -> TokenStream {
+    flow::expand_flow(attr, input)
+        .unwrap_or_else(to_compile_errors)
+        .into()
+}
+
+fn to_compile_errors(errors: Vec<syn::Error>) -> proc_macro2::TokenStream {
+    let compile_errors = errors.iter().map(syn::Error::to_compile_error);
+    quote!(#(#compile_errors)*)
+}
+
+/*fn get_attrs(){
     let attr_args = syn::parse_macro_input!(attr as syn::AttributeArgs);
     let mut tp : Option<String> = None;
     for attr_arg in attr_args {
@@ -53,16 +47,7 @@ pub fn activity(attr: TokenStream, input: TokenStream) -> TokenStream {
         }
     }
     println!("tp: {}", tp.unwrap());
-    */
-    //let _input = parse_macro_input!(item as ItemFn);
-
-    //input
-}
-
-fn to_compile_errors(errors: Vec<syn::Error>) -> proc_macro2::TokenStream {
-    let compile_errors = errors.iter().map(syn::Error::to_compile_error);
-    quote!(#(#compile_errors)*)
-}
+}*/
 
 /*#[proc_macro_derive(JsonToDovetail, attributes(path))]
 pub fn json_to_dovetail(input: TokenStream) -> TokenStream {

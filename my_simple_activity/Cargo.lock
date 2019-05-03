@@ -79,7 +79,6 @@ name = "my_simple_activity"
 version = "0.0.1"
 dependencies = [
  "dovetail_derive 0.1.0",
- "serde_json 1.0.39 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

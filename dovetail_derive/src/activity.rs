@@ -8,22 +8,17 @@ use proc_macro::TokenStream;
 use std::iter::FromIterator;
 use quote::quote;
 use proc_macro2::{Ident, Span};
-use serde_json::map::Map;
-use serde_json::Value;
-use std::env;
 use std::fs::File;
 use std::io::BufReader;
 use activity::config::Config;
-
-
-use syn::{DeriveInput, Error};
+use syn::{Error};
 
 static ACTIVITY_CONFIG_PATH: &str = "activity.json";
 
 pub fn expand_activity(
-    attr: TokenStream,
+    _attr: TokenStream,
     input: TokenStream,
-) -> Result<proc_macro2::TokenStream, Vec<syn::Error>> {
+) -> Result<proc_macro2::TokenStream, Vec<Error>> {
     let mut tokens: Vec<proc_macro2::TokenStream> = Vec::new();
 
     println!("Looking for activity configuration at '{}'", &ACTIVITY_CONFIG_PATH);
@@ -46,8 +41,8 @@ pub fn expand_activity(
             tokens.push(act_input);
         },
         Err(why) => {
-            let mut errors: Vec<syn::Error> = Vec::new();
-            errors.push(syn::Error::new(Span::call_site(), format!("couldn't generate activity input data : {:?}", why)));
+            let mut errors: Vec<Error> = Vec::new();
+            errors.push(Error::new(Span::call_site(), format!("couldn't generate activity input data : {:?}", why)));
             return Err(errors);
         }
     }
@@ -61,8 +56,8 @@ pub fn expand_activity(
             tokens.push(act_output);
         },
         Err(why) => {
-            let mut errors: Vec<syn::Error> = Vec::new();
-            errors.push(syn::Error::new(Span::call_site(), format!("couldn't generate activity output data : {:?}", why)));
+            let mut errors: Vec<Error> = Vec::new();
+            errors.push(Error::new(Span::call_site(), format!("couldn't generate activity output data : {:?}", why)));
             return Err(errors);
         }
     }
@@ -76,12 +71,12 @@ pub fn expand_activity(
     Ok(res)
 }
 
-fn read_act_config(act_config_path: &str) -> Result<Config, Vec<syn::Error>> {
+fn read_act_config(act_config_path: &str) -> Result<Config, Vec<Error>> {
     // Load json file
     let file = match  File::open(&act_config_path) {
         Err(why) => {
-            let mut errors: Vec<syn::Error> = Vec::new();
-            errors.push(syn::Error::new(Span::call_site(), format!("couldn't open {}: {:?}", &act_config_path, why)));
+            let mut errors: Vec<Error> = Vec::new();
+            errors.push(Error::new(Span::call_site(), format!("couldn't open {}: {:?}", &act_config_path, why)));
             return Err(errors);
         },
         Ok(file) => file,
@@ -100,7 +95,7 @@ fn read_act_config(act_config_path: &str) -> Result<Config, Vec<syn::Error>> {
     Ok(act_config)
 }
 
-fn generate_act_input(act_config: &Config) -> Result<proc_macro2::TokenStream, Vec<syn::Error>>{
+fn generate_act_input(act_config: &Config) -> Result<proc_macro2::TokenStream, Vec<Error>>{
     println!("Generating activity input data...");
     let act_attrs = generate_act_input_attrs(&act_config);
     let act_input = quote!{
@@ -130,7 +125,7 @@ fn generate_act_input_attrs(act_config: &Config) -> proc_macro2::TokenStream {
     input_attrs
 }
 
-fn generate_act_output(act_config: &Config) -> Result<proc_macro2::TokenStream, Vec<syn::Error>>{
+fn generate_act_output(act_config: &Config) -> Result<proc_macro2::TokenStream, Vec<Error>>{
     println!("Generating activity output data...");
     let act_attrs = generate_act_output_attrs(&act_config);
     let act_output = quote!{

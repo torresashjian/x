@@ -17,7 +17,7 @@ pub struct ActivityOutput{
 #[activity()]
 pub fn start_my_simple_activity_return(activity_input: ActivityInput) -> Result<ActivityOutput, String>{
   println!("Inside start_my_simple_activity_return");
-  let msg = format!("Logging the message {} and status {}", &activity_input.message, &activity_input.status);
+  println!("Logging the message {} and status {}", &activity_input.message, &activity_input.status);
   Ok(ActivityOutput{})
 }
 

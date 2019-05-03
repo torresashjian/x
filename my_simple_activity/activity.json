@@ -12,11 +12,11 @@
       "type": "string",
       "value": "Default Value"
     }
-    {
-      "name": "status",
-      "type": "integer"
-    }
   ],
   "output": [
+    {
+      "name": "message",
+      "type": "string"
+    }
   ]
 }

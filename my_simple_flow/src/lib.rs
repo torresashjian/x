@@ -1,11 +1,11 @@
 // Generated Code
-extern crate dovetail_flow_macro_derive;
+//extern crate dovetail_flow_macro_derive;
 // Generated Code
-use dovetail_flow_macro_derive::dovetail_flow;
+use dovetail_derive::flow;
 
 // Generated Code
 // This will generate all flows
-//#[dovetail_flow()]
+#[flow()]
 fn start() {
 }
 
@@ -96,6 +96,18 @@ pub mod Wasm {
         }
     }
 }
+
+#[cfg(test)]
+    mod tests {
+        use crate::Wasm::FlowInput;
+        #[test]
+        fn test_Wasm() {
+            // Preparing mock Flow Input
+            let flow_input = Wasm::FlowInput{test_flow_input: String::from("Test Flow Input")};
+            let res = start_Wasm(flow_input);
+            assert_eq!("Logging the message Test Flow Input", res.unwrap().test_flow_output);
+        }
+    }
 
 
 
