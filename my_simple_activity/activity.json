@@ -1,0 +1,22 @@
+{
+  "name": "my_simple_activity",
+  "type": "flogo:activity",
+  "ref": "github.com/torresashjian/flogo-contrib/activity/my_simple_activity",
+  "version": "0.0.1",
+  "title": "Log Message",
+  "description": "Simple Log Activity",
+  "homepage": "https://github.com/TIBCOSoftware/flogo-contrib/tree/master/activity/log",
+  "input":[
+    {
+      "name": "message",
+      "type": "string",
+      "value": "Default Value"
+    }
+  ],
+  "output": [
+    {
+      "name": "message",
+      "type": "string"
+    }
+  ]
+}

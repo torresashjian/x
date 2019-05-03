@@ -1,0 +1,219 @@
+{
+ "name": "my_simple_app",
+ "description": " ",
+ "version": "1.0.0",
+ "type": "flogo:app",
+ "appModel": "1.0.0",
+ "resources": [
+  {
+   "id": "flow:wasm",
+   "data": {
+    "name": "wasm",
+    "description": "",
+    "tasks": [
+     {
+      "id": "LogMessage",
+      "name": "LogMessage",
+      "activity": {
+       "ref": "github.com/TIBCOSoftware/flogo-contrib/activity/log",
+       "input": {
+        "flowInfo": "false",
+        "addToFlow": "false"
+       },
+       "output": {},
+       "mappings": {
+        "input": [
+         {
+          "mapTo": "$INPUT['message']",
+          "type": "expression",
+          "value": "$flow.test_flow_input"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "id": "Return",
+      "name": "Return",
+      "activity": {
+       "ref": "github.com/TIBCOSoftware/flogo-contrib/activity/actreturn",
+       "input": {
+        "mappings": [
+         {
+          "mapTo": "$INPUT['test_flow_output']",
+          "type": "expression",
+          "value": "$activity[LogMessage].message"
+         }
+        ]
+       },
+       "output": {}
+      }
+     },
+     {
+      "id": "Return1",
+      "name": "Return1",
+      "activity": {
+       "ref": "github.com/TIBCOSoftware/flogo-contrib/activity/actreturn",
+       "input": {
+        "mappings": [
+         {
+          "mapTo": "$INPUT['test_flow_output']",
+          "type": "expression",
+          "value": "$flow.test_flow_input"
+         }
+        ]
+       },
+       "output": {}
+      }
+     }
+    ],
+    "links": [
+     {
+      "id": 1,
+      "from": "LogMessage",
+      "to": "Return",
+      "type": "default"
+     },
+     {
+      "id": 2,
+      "from": "LogMessage",
+      "to": "Return1",
+      "type": "expression",
+      "value": "$activity[LogMessage].message == \"\""
+     }
+    ],
+    "metadata": {
+     "input": [
+      {
+       "name": "test_flow_input",
+       "type": "string"
+      }
+     ],
+     "output": [
+      {
+       "name": "test_flow_output",
+       "type": "string"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "triggers": [
+  {
+   "ref": "github.com/TIBCOSoftware/flogo-contrib/trigger/rest",
+   "name": "ReceiveHTTPMessage",
+   "description": "",
+   "settings": {
+    "port": 8080
+   },
+   "id": "ReceiveHTTPMessage",
+   "handlers": [
+    {
+     "description": "",
+     "settings": {
+      "method": "get",
+      "path": "/test"
+     },
+     "outputs": {},
+     "action": {
+      "ref": "github.com/TIBCOSoftware/flogo-contrib/action/flow",
+      "data": {
+       "flowURI": "res://flow:wasm"
+      },
+      "mappings": {
+       "input": [
+        {
+         "mapTo": "$INPUT['test_flow_input']",
+         "type": "expression",
+         "value": "string.tostring($.params)"
+        }
+       ],
+       "output": [
+        {
+         "mapTo": "$INPUT['code']",
+         "type": "expression",
+         "value": "$.test_flow_output"
+        }
+       ]
+      }
+     },
+     "reply": {
+      "code": "$.test_flow_output",
+      "data": "any"
+     }
+    }
+   ]
+  },
+  {
+   "ref": "git.tibco.com/git/product/ipaas/wi-contrib.git/contributions/General/trigger/timer",
+   "name": "TimerTrigger",
+   "description": "",
+   "settings": {},
+   "id": "TimerTrigger",
+   "handlers": [
+    {
+     "description": "",
+     "settings": {
+      "Repeating": false,
+      "Start Date": "",
+      "Time Interval": 1,
+      "Interval Unit": "Second"
+     },
+     "outputs": {},
+     "action": {
+      "ref": "github.com/TIBCOSoftware/flogo-contrib/action/flow",
+      "data": {
+       "flowURI": "res://flow:wasm"
+      },
+      "mappings": {
+       "input": [],
+       "output": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "ref": "github.com/TIBCOSoftware/flogo-contrib/trigger/rest",
+   "name": "ReceiveHTTPMessage1",
+   "description": "",
+   "settings": {
+    "port": 8081
+   },
+   "id": "ReceiveHTTPMessage1",
+   "handlers": [
+    {
+     "description": "",
+     "settings": {
+      "method": "get",
+      "path": "/test"
+     },
+     "outputs": {},
+     "action": {
+      "ref": "github.com/TIBCOSoftware/flogo-contrib/action/flow",
+      "data": {
+       "flowURI": "res://flow:wasm"
+      },
+      "mappings": {
+       "input": [
+        {
+         "mapTo": "$INPUT['test_flow_input']",
+         "type": "expression",
+         "value": "$.params.something"
+        }
+       ],
+       "output": []
+      }
+     },
+     "reply": {
+      "code": 200,
+      "data": "any"
+     }
+    }
+   ]
+  }
+ ],
+ "ui": "UEsDBAoAAAAIAO+hmU6vMH1N7AgAAE0mAAAIAAAAYXBwLmpzb27tWVtv2zgW/iuCtsDsAqEtSpREBRhgZ9vuNMB0GjTuzEMTBLzamtqSR6KTBkH++xxSsixf0shtB+gumgdHFA957t85pO79RSnV/DdV1XlZ+Kd+OApGgX/i5xIGNCWY4ogGJIlJjAMS2ym2XM5zwQws+JUtFNAt7q7rfLGcq2uYAwqpalHlS9Ns6cGbm44BbhnoeXlb+6f3vohjoZM0QDRKM0S0ZIhjGGY6iGmqsUpSZemunUiDqE/8ohHsltWLPXmsdkYtHPMMp1GYJSGKsIbtlIgQTQRHQsZBKCS8UMzSOd6DiE98c7e0vEHBaXnKhMlvcnO3ZQOwwAhvpHSUqFJmVRVWuGK5Mq/BknkxdUIues/Pzn49fzd5/4NRtbm2NrwuVwbof7iys+rjslJ1y+XZmvf7X8rpa3jNpupqtGgegE9v2wf4O/GbnXqc4Z3JzdzK+HYt3bYtL5zbvWbW+2mjbKU0TE9zM1vxkSgX48nZf56/uSi1uWWVGjcqi7IwVc7Ha0HtQ2eGWhnTyPH+ai1bO3AWss/3axN2unTmZ1XFGkH+XOWVAv+ZaqVA/rxezmHmtFtrFVbVZuViPW4e3jjOF6JsthVW81EjTkvDuDVRs/1Gas3mtQIL3rD5yq70H0DyGSvkHDYH7n39Hqycy/ldo14dnYP58o9NrH5Qd81DT/KbvM47ptZLrP4wcdJHboHO1Vw2q2x++6cYiFLFMpVyjXCacUQSTlHGIIZjFQQKa5liuon1QcSfEesm56JEQD400Nt4PRTfNvxHm0Rw2x0b15vUeCy2geLLA7tR+LGQ3oRxJ0pr2Bq2KaYudA4E/SPU/Zg7ue+hzO1ZocsNOS/LuWJFj97FbH8Rk3JS/hdWDlj1GeHtrNXFuBuNXyjNVnOzZbtuMPqjLouhuYAfyQUrZz37rZH+3g1gXlKSxVmcsDRLqaSUJjzGSmQck1BBySFJEEEpTJUMeEpilvEs4UTjMMgipiJ6IOpt8FFKQpwQhiIiCSJZpBHnIkOM0DAiTCdZEnRZN4h4J+vA59Opw6snC0xtji8vjvxA9jWxNjJl8/DPZ60coyWr2KL+16BEPMhbgJcGpPsWBG+x2dQsofIb9WoyOX8ix9++vJh4k86QR+V4q/e4NW8v7rssWpaV2bgtL4xa89muTW1C0YAGD4cBojHuZq923MvYJTOz8yep/lyp6u5psplisl8a9ymsFVTR044Vd9tw9Sgs9HDMzEp5AMZ27cPm4Hg7fO///HICBOdvLty/d+73p8nzV/D/xctfXk5e+lcbgJoqs2uiAdzWq8c25kCnHor11Jdq37M9XpIZtm+cgRDYD6314CgEDI5DQEAzEoY84EnGk0RlOoW2OmAaiyASoYpYQFSUsDhKlZJCRlJSLVQWQF8chzJ8BAGzjPAEqxSFkQgQYVkCLXssUQZ9RMywihlNNz32EOIBCLg+Zmy1Hbc5MvnCUe6i4BNtwsQu2wDEQRBxNJ7ZR5GR4+6ABEbjZVXKlTDjfMlYPQaZWiQZ2cn2eWW3rsc/q0JVbN4Fwlr6Ib3x03n3Vi0VM03w7xX3/T65T75tgLNC2gOhqr3bGeSytcIsrz0L0149K1dz6VWrwiuL+R38COWVlbeAAM+t2axOFlLW+ea6id1s7GXUhWGV8V4AuwM5fCgr2g33lz8cbpSsH70zSOUKZg/B9r5pdpdsm2cya7T08pbCM6VXOznAWI2Z1EclnNNd4DBpbdWJDkvyDSxt6bXRAX/CZmvRvHdFbgZA376Guzvsa7iCCa/UR2nayiGrcinL2+bUN1ei3bUG4ebqsw3iXyjIJltXenWje/c6L1YuhF6VK+vUF+60+LtSH/yrh8c71olN5Q6u3ehwln4Crwehh82naVlZLu3+/sk20oNcC9DsTLhtcmEBIxdoG+pG9Y118JxVU/Vpyn+HH0dLe9b4/AICIE0ooUITGac0gCIRhQKLJGMypYKGPNI8gR+iJA2hxY5xmkRJpnGUaRlkwQEEtwWEJHGSBDFHVMIxlKRaIJrFAsUR5lAtAqxY3BWQQcTfRgu90zKP6tJ2Qk1GHnk5s9vo4v+ZThd/73S/d7r/J51uRNI4C6BljbXKEMGEIM4ER0FKkzCVKhIUd0A1iLiz5xbHDSwV6tazRhgKSrb45RYRjr0v9n780bv0L/1joQkEbOXbu4RvsOdLu9mveHcabscQzCVRRMMoDRFXNEUEapQtKwxhwWhCOYbDSNI5dBDxN/R54GtcnzYX/49Xm+/fBb717wJAZauEi56qLI0L59oCPhE6FGGImAw1IjykiIuUogCeNNY8DLC2OVLARs2HvCEL1skyiLhR4OxFI3HjBgyQLmb5XFaqsOWRKp7EONMo5JIjIoIEUYIVSgjHmQhCQG1uKyQUdKje1qq+jKmmmCbALBGIJMCWRZggaEYDrQKuNLYRHcuMsjTEiDAWIEITiTJGFcpomiVxLBQguCUT0HJmkUBaJyHguJaIMaJBAAydsI4ypYQVoF7x86oUrVsHid1dCw8h7hnrqI838bY9OcFRLMIA4ThxjuGIBwJU1zpmMU8DJQSsTaBGhZpFyN6II0Lsd1hCYuAYMSKEZjJiO2Yf5PJtQ53419dwfDSrugnLC3c6tEnbZBEYcpC8a0MOVK4z5FFffHG4Zclt5YeG6XaUDIrUtXIDw7pT7qiPDdF2lAz15cYCe7oNSq+1bgNzceO4Y64R/wbdhmBCp9sQ4p5uR51wv75ugzK/64mGEPd0O6opTnYqARdM0giDp238x9CJMRXHKCA0VtbxCof+F2flAEgaJEiH7UOIexY6qsv8JCQNhfBByruGw7WLrgm7EDO1cGHgDnGn/v1l4cHfpb/TcF76p+1LOF0UD7a/a5fCEv9ZMwCiS39mzPJ0PLb7oeb1qKymY1kxbcBa4+bdPy79k0unvVtU8j9AQPduWUGnVplc1TBzf0iQ+97C5qx8Cce6B7/rgYdo1VB+C2p1kjyql3WXqBQDD9rrR4iXOE5C+IvSCMf21rA275by0XnocZ9D5zq1/R+NHv4CUEsBAhQACgAAAAgA76GZTq8wfU3sCAAATSYAAAgAAAAAAAAAAAAAAAAAAAAAAGFwcC5qc29uUEsFBgAAAAABAAEANgAAABIJAAAAAA==",
+ "contrib": "W3sicmVmIjoiZ2l0aHViLmNvbS9USUJDT1NvZnR3YXJlL2Zsb2dvLWNvbnRyaWIvYWN0aXZpdHkvbG9nIiwiczNsb2NhdGlvbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODkwMC93aWNvbnRyaWJ1dGlvbnMvZmxvZ28vRGVmYXVsdC9hY3Rpdml0eS9sb2cifSx7InJlZiI6ImdpdGh1Yi5jb20vVElCQ09Tb2Z0d2FyZS9mbG9nby1jb250cmliL3RyaWdnZXIvcmVzdCIsInMzbG9jYXRpb24iOiJodHRwOi8vbG9jYWxob3N0Ojg5MDAvd2ljb250cmlidXRpb25zL2Zsb2dvL0RlZmF1bHQvdHJpZ2dlci9yZXN0In0seyJyZWYiOiJnaXQudGliY28uY29tL2dpdC9wcm9kdWN0L2lwYWFzL3dpLWNvbnRyaWIuZ2l0L2NvbnRyaWJ1dGlvbnMvR2VuZXJhbCIsInMzbG9jYXRpb24iOiJodHRwOi8vbG9jYWxob3N0Ojg5MDAvd2ljb250cmlidXRpb25zL1RpYmNvL0dlbmVyYWwifV0="
+}

@@ -1,0 +1,37 @@
+{
+  "name": "my_simple_trigger",
+  "type": "flogo:trigger",
+  "ref": "github.com/TIBCOSoftware/dovetail-contrib/trigger/my_simple_trigger",
+  "version": "0.0.1",
+  "title": "Simple trigger",
+  "description": "Simple Trigger",
+  "settings": [
+    {
+      "name": "port",
+      "type": "integer",
+      "required": true
+    }
+  ],
+  "output": [
+    {
+      "name": "body",
+      "type": "string"
+    }
+  ],
+  "reply": [
+    {
+      "name": "data",
+      "type": "string"
+    }
+  ],
+  "handler": {
+    "settings": [
+      {
+        "name": "method",
+        "type": "string",
+        "required" : true,
+        "allowed" : ["GET", "POST", "PUT", "PATCH", "DELETE"]
+      }
+    ]
+  }
+}

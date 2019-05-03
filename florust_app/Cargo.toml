@@ -1,0 +1,12 @@
+[package]
+name = "florust_expand"
+version = "0.1.0"
+authors = ["Miguel Torres <migueltorreslopez@gmail.com>"]
+
+[dependencies]
+dovetail_macro_derive = { path = "../dovetail_macro_derive" }
+serde_json = "1.0"
+serde_derive = "1.0"
+serde = "1.0"
+#ethcontract = { git = "https://github.com/torresashjian/dovetail-contrib", branch = "ethereum" }
+#ethledger = { git = "https://github.com/torresashjian/dovetail-contrib", branch = "ethereum" }

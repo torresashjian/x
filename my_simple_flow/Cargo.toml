@@ -1,0 +1,12 @@
+
+[package]
+name = "my_simple_flow"
+version = "0.0.1"
+authors = ["user <myemail@email.com>"]
+edition = "2018"
+
+[dependencies]
+my_simple_activity = { path = "../my_simple_activity" }
+my_simple_activity_return = { path = "../my_simple_activity_return" }
+dovetail_flow_macro_derive = { path = "../dovetail_flow_macro_derive" }
+serde_json = "1.0"

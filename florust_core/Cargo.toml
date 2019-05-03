@@ -1,0 +1,6 @@
+[package]
+name = "florust_core"
+version = "0.1.0"
+authors = ["Miguel Torres <migueltorreslopez@gmail.com>"]
+
+[dependencies]
