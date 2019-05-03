@@ -2,13 +2,12 @@
 use dovetail_derive::activity;
 
 /*
-// Developer Code
-#[dovetail_activity(tp = "input")]
+// Generated Code
 pub struct ActivityInput {
   pub message: String,
 }
 
-//#[dovetail_activity("output")]
+// Generated Code
 pub struct ActivityOutput{
   pub message: String,
 }
