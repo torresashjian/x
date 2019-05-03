@@ -1,6 +1,4 @@
 // Developer Code
-//extern crate dovetail_derive;
-// Developer Code
 use dovetail_derive::activity;
 
 /*
@@ -27,7 +25,7 @@ pub fn start_my_simple_activity(activity_input: ActivityInput) -> Result<Activit
 
 #[cfg(test)]
 mod tests {
-    use crate::start_my_simple_activity;
+    use crate::*;
     #[test]
     fn test_my_simple_activity() {
         // Preparing mock Activity Input

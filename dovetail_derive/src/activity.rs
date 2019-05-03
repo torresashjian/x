@@ -54,6 +54,21 @@ pub fn expand_activity(
 
     println!("Activity input data generated succesfully...");
 
+    let act_output_res = generate_act_output(&act_config);
+
+    match act_output_res {
+        Ok(act_output) => {
+            tokens.push(act_output);
+        },
+        Err(why) => {
+            let mut errors: Vec<syn::Error> = Vec::new();
+            errors.push(syn::Error::new(Span::call_site(), format!("couldn't generate activity output data : {:?}", why)));
+            return Err(errors);
+        }
+    }
+
+    println!("Activity output data generated succesfully...");
+
     let start_fn : proc_macro2::TokenStream = proc_macro2::TokenStream::from(input);
     tokens.push(start_fn);
     let res = proc_macro2::TokenStream::from_iter(tokens.into_iter());
@@ -113,4 +128,34 @@ fn generate_act_input_attrs(act_config: &Config) -> proc_macro2::TokenStream {
             #res
     };
     input_attrs
+}
+
+fn generate_act_output(act_config: &Config) -> Result<proc_macro2::TokenStream, Vec<syn::Error>>{
+    println!("Generating activity output data...");
+    let act_attrs = generate_act_output_attrs(&act_config);
+    let act_output = quote!{
+        pub struct ActivityOutput {
+            #act_attrs
+        }
+    };
+    Ok(act_output)
+}
+
+fn generate_act_output_attrs(act_config: &Config) -> proc_macro2::TokenStream {
+    let mut attrs_tokens: Vec<proc_macro2::TokenStream> = Vec::new();
+    // Iterate through attrs
+    for attr in &act_config.output {
+        let typ = AllTypes::from_string(attr.name.to_owned(), attr.typ.to_owned());
+        let type_name = Ident::new(&typ.get_name().unwrap(), Span::call_site());
+        let type_type = Ident::new(&typ.get_type().unwrap(), Span::call_site());
+        attrs_tokens.push(quote! {
+                pub #type_name: #type_type,
+        });
+    }
+
+    let res = proc_macro2::TokenStream::from_iter(attrs_tokens.into_iter());
+    let attrs = quote! {
+            #res
+    };
+    attrs
 }
