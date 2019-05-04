@@ -12,33 +12,33 @@ fn start() {
 //ALL Generated Code
 pub mod Wasm {
     pub struct FlowInput {
-        test_flow_input: String,
+        pub test_flow_input: String,
     }
 
     pub struct FlowOutput{
-        test_flow_output: String,
+        pub test_flow_output: String,
     }
 
     //my_simple_activity
     use my_simple_activity::{start_my_simple_activity};
     use my_simple_activity::ActivityInput as my_simple_activity_ActivityInput;
-    use my_simple_activity::ActivityOutput as my_simple_activity_ActivityOutput;
+    //use my_simple_activity::ActivityOutput as my_simple_activity_ActivityOutput;
     
     //my_simple_activity_return
-    use my_simple_activity_return::{start_my_simple_activity_return};
+    //use my_simple_activity_return::{start_my_simple_activity_return};
     use my_simple_activity_return::ActivityInput as my_simple_activity_return_ActivityInput;
-    use my_simple_activity_return::ActivityOutput as my_simple_activity_return_ActivityOutput;
+    //use my_simple_activity_return::ActivityOutput as my_simple_activity_return_ActivityOutput;
 
     #[no_mangle]
-    pub fn start_Wasm(flow_input: FlowInput) -> Result<FlowOutput, String> {
+    pub fn start_Wasm(flow_input: &FlowInput) -> Result<FlowOutput, String> {
 
         println!("Inside start_Wasm flow next task: {}", "my_simple_activity");
         // Prepare the mappings
         let mut my_simple_activity_activityInput = my_simple_activity_ActivityInput{message: "".to_string()};
         // Assignment
-        my_simple_activity_activityInput.message = flow_input.test_flow_input;
+        my_simple_activity_activityInput.message = flow_input.test_flow_input.to_owned();
         // Callback
-        let my_simple_activity_result = start_my_simple_activity(my_simple_activity_activityInput);
+        let my_simple_activity_result = start_my_simple_activity(&my_simple_activity_activityInput);
         let my_simple_activity_activityOutput = match my_simple_activity_result {
             Err(why) => {
                 return Err(why);
@@ -49,19 +49,20 @@ pub mod Wasm {
 
         // Prepare the mappings
 
-        let mut my_simple_activity_return_activityInput = my_simple_activity_return_ActivityInput{message: "".to_string()};
+        /*
+        let my_simple_activity_return_activityInput = my_simple_activity_return_ActivityInput{message: "".to_string(), status: 200};
         // Assignment
         my_simple_activity_activityInput.message = flow_input.test_flow_input;
         // Callback
-        let my_simple_activity_result = start_my_simple_activity(my_simple_activity_activityInput);
-        let my_simple_activity_activityOutput = match my_simple_activity_result {
+        let my_simple_activity_return_result = start_my_simple_activity_return(&my_simple_activity_return_activityInput);
+        let my_simple_activity_return_activityOutput = match my_simple_activity_return_result {
             Err(why) => {
                 return Err(why);
             },
-            Ok(flow_output) =>flow_output,
+            Ok(flow_output) =>my_simple_activity_return_activityOutput,
         };
-        println!("start_my_simple_activity returned with result {}, flow next task: {}",my_simple_activity_activityOutput.message, "my_simple_activity_return");
-
+        println!("start_my_simple_activity returned with result {}, flow next task: {}",my_simple_activity_return_activityOutput.message, "my_simple_activity_return");
+        */
 
         // Prepare metadata
         //let mut wasm_metadata : Map<String, Value> = Map::new();
@@ -89,26 +90,26 @@ pub mod Wasm {
         use crate::Wasm::*;
         #[test]
         fn test_Wasm() {
-        // Preparing mock Flow Input
-        let flow_input = FlowInput{test_flow_input: String::from("Test Flow Input")};
-        let res = start_Wasm(flow_input);
-        assert_eq!("Logging the message Test Flow Input", res.unwrap().test_flow_output);
+            // Preparing mock Flow Input
+            let flow_input = FlowInput{test_flow_input: String::from("Test Flow Input")};
+            let res = start_Wasm(&flow_input);
+            assert_eq!("Logging the message Test Flow Input", res.unwrap().test_flow_output);
         }
     }
 }
 
-#[cfg(test)]
+/*#[cfg(test)]
     mod tests {
-        use crate::Wasm::FlowInput;
+        use crate::Wasm::{start_Wasm,FlowInput};
         #[test]
         fn test_Wasm() {
             // Preparing mock Flow Input
-            let flow_input = Wasm::FlowInput{test_flow_input: String::from("Test Flow Input")};
-            let res = start_Wasm(flow_input);
+            let flow_input = FlowInput{test_flow_input: String::from("Test Flow Input")};
+            let res = start_Wasm(&flow_input);
             assert_eq!("Logging the message Test Flow Input", res.unwrap().test_flow_output);
         }
     }
-
+*/
 
 
 

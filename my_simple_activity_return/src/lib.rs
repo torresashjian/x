@@ -15,7 +15,7 @@ pub struct ActivityOutput{
 
 // Developer Code
 #[activity()]
-pub fn start_my_simple_activity_return(activity_input: ActivityInput) -> Result<ActivityOutput, String>{
+pub fn start_my_simple_activity_return(activity_input: &ActivityInput) -> Result<ActivityOutput, String>{
   println!("Inside start_my_simple_activity_return");
   println!("Logging the message {} and status {}", &activity_input.message, &activity_input.status);
   Ok(ActivityOutput{})
@@ -28,7 +28,7 @@ mod tests {
     fn test_my_simple_activity() {
       // Preparing mock Activity Input
       let activity_input = ActivityInput{message: String::from("Test Activity Input"), status: 200};
-      let res = start_my_simple_activity_return(activity_input);
+      let res = start_my_simple_activity_return(&activity_input);
       assert_eq!(res.is_ok(), true);
     }
 }

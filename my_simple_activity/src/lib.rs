@@ -16,7 +16,7 @@ pub struct ActivityOutput{
 
 // Developer Code
 #[activity()]
-pub fn start_my_simple_activity(activity_input: ActivityInput) -> Result<ActivityOutput, String> {
+pub fn start_my_simple_activity(activity_input: &ActivityInput) -> Result<ActivityOutput, String> {
     println!("Inside my_simple_activity");
     let msg = format!("Logging the message {}", &activity_input.message);
     println!("{}", msg);
@@ -32,7 +32,7 @@ mod tests {
         let activity_input = ActivityInput {
             message: String::from("Test Activity Input"),
         };
-        let res = start_my_simple_activity(activity_input);
+        let res = start_my_simple_activity(&activity_input);
         assert_eq!(
             "Logging the message Test Activity Input",
             res.unwrap().message
