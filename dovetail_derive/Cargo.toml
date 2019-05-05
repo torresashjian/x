@@ -18,3 +18,5 @@ darling_core="0.9.0"
 app = { path = "../core_gen/app" }
 activity = { path = "../core_gen/activity" }
 dovetail_trigger_macro_derive = { path = "../dovetail_trigger_macro_derive" }
+flow = { path = "../core_gen/flow" }
+petgraph = "0.4.13"

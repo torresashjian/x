@@ -10,7 +10,7 @@ fn start() {
 }
 
 //ALL Generated Code
-pub mod Wasm {
+pub mod Wasm2 {
     pub struct FlowInput {
         pub test_flow_input: String,
     }
@@ -30,7 +30,7 @@ pub mod Wasm {
     //use my_simple_activity_return::ActivityOutput as my_simple_activity_return_ActivityOutput;
 
     #[no_mangle]
-    pub fn start_Wasm(flow_input: &FlowInput) -> Result<FlowOutput, String> {
+    pub fn start_Wasm2(flow_input: &FlowInput) -> Result<FlowOutput, String> {
 
         println!("Inside start_Wasm flow next task: {}", "my_simple_activity");
         // Prepare the mappings
@@ -85,7 +85,7 @@ pub mod Wasm {
     }
 
 
-    #[cfg(test)]
+   /*#[cfg(test)]
     mod tests {
         use crate::Wasm::*;
         #[test]
@@ -95,21 +95,20 @@ pub mod Wasm {
             let res = start_Wasm(&flow_input);
             assert_eq!("Logging the message Test Flow Input", res.unwrap().test_flow_output);
         }
-    }
+    }*/
 }
 
-/*#[cfg(test)]
-    mod tests {
-        use crate::Wasm::{start_Wasm,FlowInput};
-        #[test]
-        fn test_Wasm() {
-            // Preparing mock Flow Input
-            let flow_input = FlowInput{test_flow_input: String::from("Test Flow Input")};
-            let res = start_Wasm(&flow_input);
-            assert_eq!("Logging the message Test Flow Input", res.unwrap().test_flow_output);
-        }
+#[cfg(test)]
+mod tests {
+    use crate::Wasm::*;
+    #[test]
+    fn test_Wasm() {
+        // Preparing mock Flow Input
+        let flow_input = FlowInput{test_flow_input: String::from("Test Flow Input")};
+        let res = start_Wasm(&flow_input);
+        assert_eq!("Logging the message Test Flow Input", res.unwrap().test_flow_output);
     }
-*/
+}
 
 
 

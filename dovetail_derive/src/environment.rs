@@ -7,7 +7,7 @@ use proc_macro2::{Span};
 use syn::{Error};
 
 pub static APP_CONFIG_PATH_KEY: &str = "APP_CONFIG_PATH";
-//static RESOURCE_FLOW_TYPE: &str = "flow";
+pub static RESOURCE_FLOW_TYPE: &str = "flow";
 
 pub fn get_app_config_path() -> Result<String, Error>{
     // Get app config path from environment
