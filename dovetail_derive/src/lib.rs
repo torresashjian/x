@@ -12,6 +12,7 @@ use proc_macro::TokenStream;
 mod activity;
 mod environment;
 mod flow;
+mod internals;
 
 #[proc_macro_attribute]
 pub fn activity(attr: TokenStream, input: TokenStream) -> TokenStream {
