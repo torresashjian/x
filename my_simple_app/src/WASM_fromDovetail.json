@@ -30,8 +30,8 @@
       }
      },
      {
-      "id": "TransactionResponse",
-      "name": "TransactionResponse",
+      "id": "my_simple_activity_return",
+      "name": "my_simple_activity_return",
       "activity": {
        "ref": "github.com/torresashjian/dovetail-contrib/SmartContract/activity/txnreply",
        "input": {
@@ -54,7 +54,7 @@
      {
       "id": 1,
       "from": "my_simple_activity",
-      "to": "TransactionResponse",
+      "to": "my_simple_activity_return",
       "type": "default"
      }
     ],

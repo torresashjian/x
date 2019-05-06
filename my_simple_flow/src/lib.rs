@@ -35,7 +35,7 @@ pub mod Wasm2 {
         println!("Inside start_Wasm flow next task: {}", "my_simple_activity");
         // Prepare the mappings
         let mut my_simple_activity_activityInput = my_simple_activity_ActivityInput{message: "".to_string()};
-        // Assignment
+        // Mappings Assignment
         my_simple_activity_activityInput.message = flow_input.test_flow_input.to_owned();
         // Callback
         let my_simple_activity_result = start_my_simple_activity(&my_simple_activity_activityInput);

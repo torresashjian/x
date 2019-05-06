@@ -15,6 +15,8 @@ use flow::config::{Link, Task};
 use petgraph::dot::Config as GraphConfig;
 use petgraph::dot::Dot;
 use petgraph::Graph;
+use petgraph::graph::NodeIndex;
+use petgraph::visit::Bfs;
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, Span};
 use quote::quote;
@@ -124,8 +126,8 @@ fn get_flow_resources(app_config: &AppConfig) -> Vec<FlowConfig> {
 
 fn create_flow_graphs<'a>(
     flow_configs: &'a Vec<FlowConfig>,
-) -> Vec<(&'a FlowConfig, Graph<&'a Task, &'a Link>)> {
-    let mut flow_graphs: Vec<(&'a FlowConfig, Graph<&'a Task, &'a Link>)> = Vec::new();
+) -> Vec<(&'a FlowConfig, Option<NodeIndex>, Graph<&'a Task, &'a Link>)> {
+    let mut flow_graphs: Vec<(&'a FlowConfig, Option<NodeIndex>, Graph<&'a Task, &'a Link>)> = Vec::new();
     for flow_config in flow_configs {
         flow_graphs.push(create_flow_graph(&flow_config));
     }
@@ -134,12 +136,16 @@ fn create_flow_graphs<'a>(
 
 fn create_flow_graph<'a>(
     flow_config: &'a FlowConfig,
-) -> (&'a FlowConfig, Graph<&'a Task, &'a Link>) {
+) -> (&'a FlowConfig, Option<NodeIndex>, Graph<&'a Task, &'a Link>) {
     let mut flow_graph = Graph::<&Task, &Link>::new();
     let mut taskid_to_nodeidx = HashMap::new();
+    let mut first_task : Option<NodeIndex> = None;
     for task in &flow_config.data.tasks {
         let task_id = task.id.to_string().clone();
         let nodeidx = flow_graph.add_node(task);
+        if first_task.is_none(){
+            first_task = Some(nodeidx);
+        }
         taskid_to_nodeidx.insert(task_id, nodeidx);
     }
     for link in &flow_config.data.links {
@@ -156,10 +162,10 @@ fn create_flow_graph<'a>(
         "{:?}",
         Dot::with_config(&flow_graph, &[GraphConfig::EdgeNoLabel])
     );*/
-    (flow_config, flow_graph)
+    (flow_config, first_task, flow_graph)
 }
 
-fn add_flows_code<'a>(graphs: Vec<(&'a FlowConfig, Graph<&'a Task, &'a Link>)>) -> Context {
+fn add_flows_code(graphs: Vec<(&FlowConfig, Option<NodeIndex>, Graph<&Task, &Link>)>) -> Context {
     let mut contxt = Context::new();
 
     for graph in graphs {
@@ -170,7 +176,7 @@ fn add_flows_code<'a>(graphs: Vec<(&'a FlowConfig, Graph<&'a Task, &'a Link>)>) 
     contxt
 }
 
-fn add_flow_code<'a>(graph: (&'a FlowConfig, Graph<&'a Task, &'a Link>)) -> Context {
+fn add_flow_code(graph: (&FlowConfig, Option<NodeIndex>, Graph<&Task, &Link>)) -> Context {
     let module_name = get_module_name(&graph.0);
     println!("Module name: {}", module_name);
 
@@ -291,10 +297,11 @@ fn create_flow_output_attrs(flow_config: &FlowConfig) -> proc_macro2::TokenStrea
 }
 
 // Adds the type that will be received as output when calling the flow
-fn add_flow_start_fn(module_name: &str, graph: (&FlowConfig, Graph<&Task, &Link>)) -> Context {
+fn add_flow_start_fn(module_name: &str, graph: (&FlowConfig, Option<NodeIndex>, Graph<&Task, &Link>)) -> Context {
     let mut contxt = Context::new();
 
-    let start_logic = create_flow_start_logic(module_name, graph);
+    let (start_logic, start_logic_contxt) = create_flow_start_logic(module_name, graph);
+    contxt.merge(&start_logic_contxt);
     let start_fn_name = format!("start_{}", module_name.to_string());
     let start_ident = Ident::new(&start_fn_name, Span::call_site());
 
@@ -310,13 +317,92 @@ fn add_flow_start_fn(module_name: &str, graph: (&FlowConfig, Graph<&Task, &Link>
     contxt
 }
 
-fn create_flow_start_logic<'a>(
+fn create_flow_start_logic(
     module_name: &str,
-    graph: (&'a FlowConfig, Graph<&'a Task, &'a Link>),
-) -> proc_macro2::TokenStream {
+    graph: (&FlowConfig, Option<NodeIndex>, Graph<&Task, &Link>),
+) -> (proc_macro2::TokenStream, Context) {
+    let mut tasks_tokens: Vec<proc_macro2::TokenStream> = Vec::new();
+    let mut contxt = Context::new();
+    // Traverse through tasks
+    let fist_task = match graph.1{
+        Some(task) => task,
+        None => {
+            contxt.errors.push(Error::new(Span::call_site(), "No First task found"));
+            return (proc_macro2::TokenStream::new(), contxt);
+        }
+    };
+
+    let g = graph.2;
+    let mut bfs = Bfs::new(&g, fist_task);
+    while let Some(nx) = bfs.next(&g) {
+        // Add tasks logic
+        let (task_token, task_contxt) = create_flow_task_logic(g[nx]);
+        tasks_tokens.push(task_token);
+        contxt.merge(&task_contxt);
+    }
+
     let logic = quote! {
         println!("Inside the logic");
-        Err("Something".to_string())
+        Ok(FlowOutput{test_flow_output: String::from("Logging the message Test Flow Input")})
     };
-    logic
+    tasks_tokens.push(logic);
+
+
+    let res = proc_macro2::TokenStream::from_iter(tasks_tokens.into_iter());
+    let flow_start_logic = quote! {
+            #res
+    };
+    (flow_start_logic, contxt)
+}
+
+fn create_flow_task_logic(task: &Task) -> (proc_macro2::TokenStream, Context){
+    let mut task_tokens: Vec<proc_macro2::TokenStream> = Vec::new();
+    let mut contxt = Context::new();
+    
+    let activity_id = &task.id; 
+    let activity_id_ident = Ident::new(&activity_id, Span::call_site());
+    let start_fn_name = format!("start_{}", &activity_id);
+    let start_fn_name_ident = Ident::new(&start_fn_name, Span::call_site());
+
+    // Add activity uses
+    // start_function use
+    let start_fn_use = parse_quote!{
+        use #activity_id_ident::#start_fn_name_ident;
+    };
+    contxt.uses.insert(start_fn_use);
+
+    let activity_input_alias = format!("{}_ActivityInput", &activity_id);
+    let activity_input_alias_ident = Ident::new(&activity_input_alias, Span::call_site());
+    // ActivityInput use
+    let activity_input_use = parse_quote!{
+        use #activity_id_ident::ActivityInput as #activity_input_alias_ident;
+    };
+    contxt.uses.insert(activity_input_use);
+
+
+
+    // Iterate through mapping inputs
+    for mapping_input in &task.activity.mappings.input {
+        println!("Mapping Input {:?}", mapping_input);
+        //let map_to
+        /*let output_type =
+            AllTypes::from_string(output_attr.name.to_owned(), output_attr.typ.to_owned());
+        let output_type_name = Ident::new(&output_type.get_name().unwrap(), Span::call_site());
+        let output_type_type = Ident::new(&output_type.get_type().unwrap(), Span::call_site());
+        attrs_tokens.push(quote! {
+                pub #output_type_name: #output_type_type,
+        });*/
+    }
+
+    // Prepare ActivityInput
+    /*let flow_start_logic = quote! {
+            #res
+    };*/
+
+
+    let res = proc_macro2::TokenStream::from_iter(task_tokens.into_iter());
+    let flow_task_logic = quote! {
+            #res
+    };
+    (flow_task_logic, contxt)
 }
