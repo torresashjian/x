@@ -9,6 +9,25 @@ use dovetail_derive::flow;
 fn start() {
 }
 
+/*#[derive(Debug)]
+pub struct MyTest {
+    pub my_str: String,
+    pub my_str2: String,
+}
+
+impl Default for MyTest {
+    fn default() -> MyTest {
+        MyTest {
+            my_str: String::from("Changed Default"),
+            my_str2: Default::default(),
+        }
+    }
+}
+
+pub fn my_test_call(my_test: MyTest){
+    println!("{:?}", my_test);
+}*/
+
 //ALL Generated Code
 pub mod Wasm2 {
     pub struct FlowInput {
@@ -25,7 +44,7 @@ pub mod Wasm2 {
     //use my_simple_activity::ActivityOutput as my_simple_activity_ActivityOutput;
     
     //my_simple_activity_return
-    //use my_simple_activity_return::{start_my_simple_activity_return};
+    use my_simple_activity_return::{start_my_simple_activity_return};
     use my_simple_activity_return::ActivityInput as my_simple_activity_return_ActivityInput;
     //use my_simple_activity_return::ActivityOutput as my_simple_activity_return_ActivityOutput;
 
@@ -100,12 +119,15 @@ pub mod Wasm2 {
 
 #[cfg(test)]
 mod tests {
+    /*use crate::MyTest;
+    use crate::my_test_call;*/
     use crate::Wasm::*;
     #[test]
     fn test_Wasm() {
         // Preparing mock Flow Input
         let flow_input = FlowInput{test_flow_input: String::from("Test Flow Input")};
         let res = start_Wasm(&flow_input);
+        //my_test_call(MyTest{..Default::default()});
         assert_eq!("Logging the message Test Flow Input", res.unwrap().test_flow_output);
     }
 }

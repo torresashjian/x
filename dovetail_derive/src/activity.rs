@@ -111,6 +111,7 @@ fn generate_act_input(act_config: &Config) -> Result<proc_macro2::TokenStream, V
     println!("Generating activity input data...");
     let act_attrs = generate_act_input_attrs(&act_config);
     let act_input = quote! {
+        #[derive(Default)]
         pub struct ActivityInput {
             #act_attrs
         }
@@ -131,10 +132,7 @@ fn generate_act_input_attrs(act_config: &Config) -> proc_macro2::TokenStream {
         });
     }
 
-    let res = proc_macro2::TokenStream::from_iter(attrs_tokens.into_iter());
-    let input_attrs = quote! {
-            #res
-    };
+    let input_attrs = proc_macro2::TokenStream::from_iter(attrs_tokens.into_iter());
     input_attrs
 }
 
@@ -142,6 +140,7 @@ fn generate_act_output(act_config: &Config) -> Result<proc_macro2::TokenStream, 
     println!("Generating activity output data...");
     let act_attrs = generate_act_output_attrs(&act_config);
     let act_output = quote! {
+        #[derive(Default)]
         pub struct ActivityOutput {
             #act_attrs
         }
@@ -161,9 +160,6 @@ fn generate_act_output_attrs(act_config: &Config) -> proc_macro2::TokenStream {
         });
     }
 
-    let res = proc_macro2::TokenStream::from_iter(attrs_tokens.into_iter());
-    let attrs = quote! {
-            #res
-    };
+    let attrs = proc_macro2::TokenStream::from_iter(attrs_tokens.into_iter());
     attrs
 }

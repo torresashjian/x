@@ -30,7 +30,7 @@ use std::iter::FromIterator;
 use syn::{parse_quote, Error, Stmt};
 
 use crate::environment;
-use crate::internals::{Context, Generator, Module};
+use crate::internals::{Context, Generator, Module, Mapper};
 
 pub fn expand_flow(
     _attr: TokenStream,
@@ -251,10 +251,7 @@ fn create_flow_input_attrs(flow_config: &FlowConfig) -> proc_macro2::TokenStream
         });
     }
 
-    let res = proc_macro2::TokenStream::from_iter(attrs_tokens.into_iter());
-    let input_attrs = quote! {
-            #res
-    };
+    let input_attrs = proc_macro2::TokenStream::from_iter(attrs_tokens.into_iter());
     input_attrs
 }
 
@@ -289,10 +286,7 @@ fn create_flow_output_attrs(flow_config: &FlowConfig) -> proc_macro2::TokenStrea
         });
     }
 
-    let res = proc_macro2::TokenStream::from_iter(attrs_tokens.into_iter());
-    let output_attrs = quote! {
-            #res
-    };
+    let output_attrs = proc_macro2::TokenStream::from_iter(attrs_tokens.into_iter());
     output_attrs
 }
 
@@ -348,10 +342,7 @@ fn create_flow_start_logic(
     tasks_tokens.push(logic);
 
 
-    let res = proc_macro2::TokenStream::from_iter(tasks_tokens.into_iter());
-    let flow_start_logic = quote! {
-            #res
-    };
+    let flow_start_logic = proc_macro2::TokenStream::from_iter(tasks_tokens.into_iter());
     (flow_start_logic, contxt)
 }
 
@@ -371,19 +362,23 @@ fn create_flow_task_logic(task: &Task) -> (proc_macro2::TokenStream, Context){
     };
     contxt.uses.insert(start_fn_use);
 
-    let activity_input_alias = format!("{}_ActivityInput", &activity_id);
-    let activity_input_alias_ident = Ident::new(&activity_input_alias, Span::call_site());
+    let activity_input_alias_type = format!("{}_ActivityInput", &activity_id);
+    let activity_input_alias_type_ident = Ident::new(&activity_input_alias_type, Span::call_site());
     // ActivityInput use
     let activity_input_use = parse_quote!{
-        use #activity_id_ident::ActivityInput as #activity_input_alias_ident;
+        use #activity_id_ident::ActivityInput as #activity_input_alias_type_ident;
     };
     contxt.uses.insert(activity_input_use);
 
-
+    let mapper = Mapper::new(&task.activity.mappings);
 
     // Iterate through mapping inputs
-    for mapping_input in &task.activity.mappings.input {
+    /*for mapping_input in &task.activity.mappings.input {
         println!("Mapping Input {:?}", mapping_input);
+        // Prepare ActivityInput with mappings
+
+
+
         //let map_to
         /*let output_type =
             AllTypes::from_string(output_attr.name.to_owned(), output_attr.typ.to_owned());
@@ -392,17 +387,21 @@ fn create_flow_task_logic(task: &Task) -> (proc_macro2::TokenStream, Context){
         attrs_tokens.push(quote! {
                 pub #output_type_name: #output_type_type,
         });*/
-    }
+    }*/
 
-    // Prepare ActivityInput
-    /*let flow_start_logic = quote! {
-            #res
-    };*/
+    let activity_input_alias = format!("a_{}_ActivityInput", &activity_id);
+    let activity_input_alias_ident = Ident::new(&activity_input_alias, Span::call_site());
+    let input_mappings = &mapper.input_mappings();
 
-
-    let res = proc_macro2::TokenStream::from_iter(task_tokens.into_iter());
-    let flow_task_logic = quote! {
-            #res
+    let activity_input_declaration = quote! {
+        let #activity_input_alias_ident = #activity_input_alias_type_ident {
+            #input_mappings
+        };
     };
+
+    task_tokens.push(activity_input_declaration);
+
+
+    let flow_task_logic = proc_macro2::TokenStream::from_iter(task_tokens.into_iter());
     (flow_task_logic, contxt)
 }
