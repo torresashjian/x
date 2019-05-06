@@ -37,36 +37,6 @@ pub fn expand_flow(
     let mut _tokens: Vec<proc_macro2::TokenStream> = Vec::new();
 
     let mut contxt = Context::new();
-    // Add use
-    /*let use_stmt: Stmt = parse_quote! {
-        use std::env;
-    };
-
-    contxt.uses.insert(use_stmt);*/
-
-    /*let mut new_contxt = Context::new();
-
-    // Add use
-    let use_stmt: Stmt = parse_quote! {
-        use std::env;
-    };
-
-    contxt.uses.insert(use_stmt);
-
-
-    // Add another use
-    let another_use_stmt: Stmt = parse_quote! {
-        use std::env;
-    };
-
-    new_contxt.uses.insert(another_use_stmt);
-
-    contxt.merge(&new_contxt);
-
-
-    println!("Context: {}", contxt.uses.len());
-
-    */
 
     println!(
         "Looking for app configuration at '{}'",
@@ -102,32 +72,6 @@ pub fn expand_flow(
 
     // Generate code
     Generator::gen(&contxt)
-
-    /*// Add use
-    let use_stmt: Stmt = parse_quote! {
-        use std::env;
-    };
-
-    contxt.uses.insert(use_stmt);
-
-    // Add use2
-    let use_stmt2: Stmt = parse_quote! {
-        use std::collections::HashSet;
-    };
-
-    contxt.uses.insert(use_stmt2);
-
-    let uses = contxt.uses;
-
-    let res = quote!{
-        #(#uses)*
-    };
-    Ok(res)*/
-    /*let res = proc_macro2::TokenStream::from_iter(contxt.uses.into_iter());
-    println!("Final Flows Code: {}", &res.to_string());
-    Ok(res)*/
-
-    //Ok(flows_code)
 }
 
 fn read_app_config(app_config_path: &str) -> AppConfig {
@@ -224,14 +168,6 @@ fn add_flows_code<'a>(graphs: Vec<(&'a FlowConfig, Graph<&'a Task, &'a Link>)>) 
     }
 
     contxt
-    /*let mut flows_tokens: Vec<proc_macro2::TokenStream> = Vec::new();
-    for graph in graphs {
-        let flow_code = generate_flow_code(graph);
-        flows_tokens.push(flow_code);
-    }
-    let res = proc_macro2::TokenStream::from_iter(flows_tokens.into_iter());
-    println!("Final Flows Code: {}", &res.to_string());
-    res*/
 }
 
 fn add_flow_code<'a>(graph: (&'a FlowConfig, Graph<&'a Task, &'a Link>)) -> Context {
@@ -256,34 +192,8 @@ fn add_flow_code<'a>(graph: (&'a FlowConfig, Graph<&'a Task, &'a Link>)) -> Cont
     let flow_start_fn_contxt = add_flow_start_fn(&module_name, graph);
     contxt.merge(&flow_start_fn_contxt);
 
-    /*let mut tokens: Vec<proc_macro2::TokenStream> = Vec::new();
-
-    // Generate the flow input struct
-    tokens.push(generate_flow_input_struct(&graph.0));
-    // Generate the flow output struct
-    tokens.push(generate_flow_output_struct(&graph.0));
-    // Generate the start flow fn
-    tokens.push(generate_flow_start_fn(&module_name, graph));
-
-    // Generate the flow module
-    generate_flow_module(&module_name, tokens)*/
-
     contxt
 }
-
-/*fn generate_flow_module(
-    module_name: &str,
-    tokens: Vec<proc_macro2::TokenStream>,
-) -> proc_macro2::TokenStream {
-    let module_identi = Ident::new(&module_name, Span::call_site());
-    let res = proc_macro2::TokenStream::from_iter(tokens.into_iter());
-    let module = quote! {
-            pub mod #module_identi {
-                #res
-            }
-    };
-    module
-}*/
 
 fn get_module_name<'a>(flow_config: &'a FlowConfig) -> &'a str {
     &flow_config.data.name
@@ -358,17 +268,6 @@ fn add_flow_output_struct(flow_config: &FlowConfig) -> Context {
     contxt
 }
 
-// Generates the type that will be returned as output when calling the flow
-/*fn generate_flow_output_struct(flow_config: &FlowConfig) -> proc_macro2::TokenStream {
-    let output_attrs = generate_flow_output_attrs(flow_config);
-    let output_struct = quote! {
-            pub struct FlowOutput {
-                #output_attrs
-            }
-    };
-    output_struct
-}*/
-
 fn create_flow_output_attrs(flow_config: &FlowConfig) -> proc_macro2::TokenStream {
     let mut attrs_tokens: Vec<proc_macro2::TokenStream> = Vec::new();
     // Get metadata
@@ -392,10 +291,7 @@ fn create_flow_output_attrs(flow_config: &FlowConfig) -> proc_macro2::TokenStrea
 }
 
 // Adds the type that will be received as output when calling the flow
-fn add_flow_start_fn(
-    module_name: &str,
-    graph: (&FlowConfig, Graph<&Task, &Link>),
-) -> Context {
+fn add_flow_start_fn(module_name: &str, graph: (&FlowConfig, Graph<&Task, &Link>)) -> Context {
     let mut contxt = Context::new();
 
     let start_logic = create_flow_start_logic(module_name, graph);
@@ -413,24 +309,6 @@ fn add_flow_start_fn(
 
     contxt
 }
-
-// Generates the flow start function
-/*fn generate_flow_start_fn<'a>(
-    module_name: &str,
-    graph: (&'a FlowConfig, Graph<&'a Task, &'a Link>),
-) -> proc_macro2::TokenStream {
-    let start_logic = generate_flow_start_logic(module_name, graph);
-    let start_fn_name = format!("start_{}", module_name.to_string());
-    let start_ident = Ident::new(&start_fn_name, Span::call_site());
-
-    let start_fn = quote! {
-            #[no_mangle]
-            pub fn #start_ident(flow_input: &FlowInput) -> Result<FlowOutput, String> {
-                #start_logic
-            }
-    };
-    start_fn
-}*/
 
 fn create_flow_start_logic<'a>(
     module_name: &str,
