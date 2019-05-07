@@ -187,11 +187,6 @@ fn generate_default_act_attrs(attrs: &Vec<DataType>) -> proc_macro2::TokenStream
         let typ = AllTypes::from_string(attr.name.to_owned(), attr.typ.to_owned(), attr.value.to_owned());
         let type_name = Ident::new(&typ.get_name().unwrap(), Span::call_site());
         let default_value = &typ.get_value().unwrap();
-        /*if !attr_value.is_empty(){
-            default_value = quote! {
-                #attr_value
-            };
-        }*/
         attrs_tokens.push(quote! {
                 #type_name: #default_value,
         });

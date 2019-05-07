@@ -390,7 +390,16 @@ fn create_flow_task_logic(task: &Task) -> (proc_macro2::TokenStream, Context){
 
     let activity_input_alias = format!("a_{}_ActivityInput", &activity_id);
     let activity_input_alias_ident = Ident::new(&activity_input_alias, Span::call_site());
-    let input_mappings = &mapper.input_mappings();
+    let input_mappings_res = mapper.input_mappings();
+    
+    let input_mappings = match input_mappings_res {
+        Ok(mappings) => mappings,
+        Err(e)=> {
+            contxt.errors.push(e.clone());
+            let errs = contxt.check();
+            return (proc_macro2::TokenStream::new(), contxt);
+        }
+    };
 
     let activity_input_declaration = quote! {
         let #activity_input_alias_ident = #activity_input_alias_type_ident {

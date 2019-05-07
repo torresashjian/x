@@ -80,7 +80,8 @@ pub struct Mappings {
 
 #[derive(Deserialize, Debug)]
 pub struct Mapping {
-    pub mapTo: String,
+    #[serde(rename = "mapTo")]
+    pub map_to: String,
     #[serde(rename = "type")]
     pub typ: String,
     pub value: String,
