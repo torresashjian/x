@@ -3,7 +3,7 @@
 // in the license file that is distributed with this file.
 extern crate serde_json;
 
-use activity::config::Config;
+use activity::config::{Config, DataType};
 use app::types::AllTypes;
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, Span};
@@ -110,10 +110,18 @@ fn read_act_config(act_config_path: &str) -> Result<Config, Vec<Error>> {
 fn generate_act_input(act_config: &Config) -> Result<proc_macro2::TokenStream, Vec<Error>> {
     println!("Generating activity input data...");
     let act_attrs = generate_act_input_attrs(&act_config);
+    let default_act_attrs = generate_default_act_attrs(&act_config.input);
     let act_input = quote! {
-        #[derive(Default)]
         pub struct ActivityInput {
             #act_attrs
+        }
+
+        impl Default for ActivityInput {
+            fn default() -> ActivityInput {
+                ActivityInput {
+                    #default_act_attrs
+                }
+            }
         }
     };
     Ok(act_input)
@@ -124,7 +132,7 @@ fn generate_act_input_attrs(act_config: &Config) -> proc_macro2::TokenStream {
     // Iterate through input attrs
     for input_attr in &act_config.input {
         let input_type =
-            AllTypes::from_string(input_attr.name.to_owned(), input_attr.typ.to_owned());
+            AllTypes::from_string(input_attr.name.to_owned(), input_attr.typ.to_owned(), input_attr.value.to_owned());
         let input_type_name = Ident::new(&input_type.get_name().unwrap(), Span::call_site());
         let input_type_type = Ident::new(&input_type.get_type().unwrap(), Span::call_site());
         attrs_tokens.push(quote! {
@@ -139,10 +147,18 @@ fn generate_act_input_attrs(act_config: &Config) -> proc_macro2::TokenStream {
 fn generate_act_output(act_config: &Config) -> Result<proc_macro2::TokenStream, Vec<Error>> {
     println!("Generating activity output data...");
     let act_attrs = generate_act_output_attrs(&act_config);
+    let default_act_attrs = generate_default_act_attrs(&act_config.output);
     let act_output = quote! {
-        #[derive(Default)]
         pub struct ActivityOutput {
             #act_attrs
+        }
+
+        impl Default for ActivityOutput {
+            fn default() -> ActivityOutput {
+                ActivityOutput {
+                    #default_act_attrs
+                }
+            }
         }
     };
     Ok(act_output)
@@ -152,11 +168,32 @@ fn generate_act_output_attrs(act_config: &Config) -> proc_macro2::TokenStream {
     let mut attrs_tokens: Vec<proc_macro2::TokenStream> = Vec::new();
     // Iterate through attrs
     for attr in &act_config.output {
-        let typ = AllTypes::from_string(attr.name.to_owned(), attr.typ.to_owned());
+        let typ = AllTypes::from_string(attr.name.to_owned(), attr.typ.to_owned(), attr.value.to_owned());
         let type_name = Ident::new(&typ.get_name().unwrap(), Span::call_site());
         let type_type = Ident::new(&typ.get_type().unwrap(), Span::call_site());
         attrs_tokens.push(quote! {
                 pub #type_name: #type_type,
+        });
+    }
+
+    let attrs = proc_macro2::TokenStream::from_iter(attrs_tokens.into_iter());
+    attrs
+}
+
+fn generate_default_act_attrs(attrs: &Vec<DataType>) -> proc_macro2::TokenStream {
+    let mut attrs_tokens: Vec<proc_macro2::TokenStream> = Vec::new();
+    // Iterate through attrs
+    for attr in attrs {
+        let typ = AllTypes::from_string(attr.name.to_owned(), attr.typ.to_owned(), attr.value.to_owned());
+        let type_name = Ident::new(&typ.get_name().unwrap(), Span::call_site());
+        let default_value = &typ.get_value().unwrap();
+        /*if !attr_value.is_empty(){
+            default_value = quote! {
+                #attr_value
+            };
+        }*/
+        attrs_tokens.push(quote! {
+                #type_name: #default_value,
         });
     }
 

@@ -29,27 +29,38 @@ pub fn parse_id(id: &String) -> Result<CompositeId, String> {
     let len = vec.len();
     match len {
         1 => {
-                let split_id_part = vec.get(0);
-                if None == split_id_part {
-                    return Err(format!("No Id part found for element '{}'", id));
-                }
-                // This case has no type
-                return Ok(CompositeId::new(id.to_string(), "".to_string(), vec.get(0).unwrap().to_string()));
-        },
+            let split_id_part = vec.get(0);
+            if None == split_id_part {
+                return Err(format!("No Id part found for element '{}'", id));
+            }
+            // This case has no type
+            return Ok(CompositeId::new(
+                id.to_string(),
+                "".to_string(),
+                vec.get(0).unwrap().to_string(),
+            ));
+        }
         2 => {
-                if None == vec.get(0) {
-                    return Err(format!("No type part found for element '{}'", id));
-                }
+            if None == vec.get(0) {
+                return Err(format!("No type part found for element '{}'", id));
+            }
 
-                if None == vec.get(1) {
-                    return Err(format!("No Id part found for element '{}'", id));
-                }
-                // This case has type and id
-                return Ok(CompositeId::new(id.to_string(), vec.get(0).unwrap().to_string(), vec.get(1).unwrap().to_string()));
-        },
-        _ => {  
-                // Unsupported id format
-                return Err(format!("Unsupported id format with {} reparation tokens", len));
-        },
+            if None == vec.get(1) {
+                return Err(format!("No Id part found for element '{}'", id));
+            }
+            // This case has type and id
+            return Ok(CompositeId::new(
+                id.to_string(),
+                vec.get(0).unwrap().to_string(),
+                vec.get(1).unwrap().to_string(),
+            ));
+        }
+        _ => {
+            // Unsupported id format
+            return Err(format!(
+                "Unsupported id format with {} reparation tokens",
+                len
+            ));
+        }
     }
 }

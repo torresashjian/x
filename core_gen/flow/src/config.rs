@@ -5,12 +5,12 @@ use serde_json::value::Value;
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
-    pub id:  String,
+    pub id: String,
     pub data: Data,
 }
 impl Config {
     pub fn new(id: String, data: Data) -> Config {
-        Config{id: id, data: data}
+        Config { id: id, data: data }
     }
 }
 #[derive(Deserialize, Debug)]
@@ -54,6 +54,8 @@ pub struct DataType {
     pub name: String,
     #[serde(rename = "type")]
     pub typ: String,
+    #[serde(default)]
+    pub value: String,
 }
 
 #[derive(Deserialize, Debug)]

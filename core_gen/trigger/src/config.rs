@@ -5,7 +5,7 @@ use serde_json::value::Value;
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
-    pub id:  String,
+    pub id: String,
     #[serde(rename = "ref")]
     pub reference: String,
     #[serde(default)]
@@ -27,14 +27,14 @@ pub struct Handler {
 #[derive(Deserialize, Debug)]
 pub struct Action {
     #[serde(default)]
-    pub id:  String,
+    pub id: String,
     #[serde(rename = "ref")]
     pub reference: String,
     #[serde(default)]
     pub settings: serde_json::map::Map<String, Value>,
     #[serde(rename = "if")]
     #[serde(default)]
-    pub iff:  String,
+    pub iff: String,
     #[serde(default)]
     pub input: serde_json::map::Map<String, Value>,
     #[serde(default)]

@@ -12,8 +12,8 @@ use app::types::AllTypes;
 use flow::config::Config as FlowConfig;
 use flow::config::Data as FlowData;
 use flow::config::{Link, Task};
-use petgraph::dot::Config as GraphConfig;
-use petgraph::dot::Dot;
+//use petgraph::dot::Config as GraphConfig;
+//use petgraph::dot::Dot;
 use petgraph::Graph;
 use petgraph::graph::NodeIndex;
 use petgraph::visit::Bfs;
@@ -21,7 +21,6 @@ use proc_macro::TokenStream;
 use proc_macro2::{Ident, Span};
 use quote::quote;
 use std::collections::HashMap;
-use std::collections::HashSet;
 use std::env;
 use std::fs::File;
 use std::io::BufReader;
@@ -243,7 +242,7 @@ fn create_flow_input_attrs(flow_config: &FlowConfig) -> proc_macro2::TokenStream
     // Iterate through input attrs
     for input_attr in &meta.input {
         let input_type =
-            AllTypes::from_string(input_attr.name.to_owned(), input_attr.typ.to_owned());
+            AllTypes::from_string(input_attr.name.to_owned(), input_attr.typ.to_owned(), input_attr.value.to_owned());
         let input_type_name = Ident::new(&input_type.get_name().unwrap(), Span::call_site());
         let input_type_type = Ident::new(&input_type.get_type().unwrap(), Span::call_site());
         attrs_tokens.push(quote! {
@@ -278,7 +277,7 @@ fn create_flow_output_attrs(flow_config: &FlowConfig) -> proc_macro2::TokenStrea
     // Iterate through output attrs
     for output_attr in &meta.output {
         let output_type =
-            AllTypes::from_string(output_attr.name.to_owned(), output_attr.typ.to_owned());
+            AllTypes::from_string(output_attr.name.to_owned(), output_attr.typ.to_owned(), output_attr.value.to_owned());
         let output_type_name = Ident::new(&output_type.get_name().unwrap(), Span::call_site());
         let output_type_type = Ident::new(&output_type.get_type().unwrap(), Span::call_site());
         attrs_tokens.push(quote! {

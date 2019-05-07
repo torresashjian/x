@@ -11,18 +11,16 @@ extern crate serde_derive;
 #[derive(Debug)]
 enum AllTypes {
     TypeAny(bool),
-	TypeString(bool),
-	TypeInteger(bool),
-	TypeLong(bool),
-	TypeDouble(bool),
-	TypeBoolean(bool),
-	TypeObject(bool),
-	TypeComplexObject(bool),
-	TypeArray(bool),
-	TypeParams(bool),
+    TypeString(bool),
+    TypeInteger(bool),
+    TypeLong(bool),
+    TypeDouble(bool),
+    TypeBoolean(bool),
+    TypeObject(bool),
+    TypeComplexObject(bool),
+    TypeArray(bool),
+    TypeParams(bool),
     TypeUnsupported,
 }
 
-impl AllTypes {
-
-}
+impl AllTypes {}

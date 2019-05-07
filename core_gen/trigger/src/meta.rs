@@ -5,7 +5,7 @@
 pub struct Metadata {
     pub name: String,
     #[serde(rename = "type")]
-    pub typ: String, 
+    pub typ: String,
     #[serde(rename = "ref")]
     pub reference: String,
     pub version: String,

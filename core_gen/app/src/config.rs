@@ -7,11 +7,11 @@ extern crate serde_json;
 use serde_json::value::Value;
 use trigger;
 
-use crate::id::{IdParser, parse_id};
+use crate::id::{parse_id, IdParser};
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
-    pub name:  String,
+    pub name: String,
     #[serde(rename = "type")]
     pub typ: String,
     pub version: String,
@@ -22,7 +22,7 @@ pub struct Config {
 
 #[derive(Deserialize, Debug)]
 pub struct Resource {
-    pub id:  String,
+    pub id: String,
     pub data: Value,
 }
 
@@ -31,12 +31,12 @@ impl IdParser for Resource {
         return Ok(self.id.to_owned());
     }
 
-    fn get_type(&self) -> Result<String, String>{
+    fn get_type(&self) -> Result<String, String> {
         let parsed_res = parse_id(&self.id);
         match parsed_res {
             Ok(composite_id) => Ok(composite_id.typ),
             Err(err_msg) => Err(err_msg),
-        } 
+        }
     }
 
     fn get_id(&self) -> Result<String, String> {

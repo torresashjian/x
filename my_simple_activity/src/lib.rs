@@ -13,7 +13,6 @@ pub struct ActivityOutput{
 }
 */
 
-
 // Developer Code
 #[activity()]
 pub fn start_my_simple_activity(activity_input: &ActivityInput) -> Result<ActivityOutput, String> {
@@ -26,11 +25,13 @@ pub fn start_my_simple_activity(activity_input: &ActivityInput) -> Result<Activi
 #[cfg(test)]
 mod tests {
     use crate::*;
+
     #[test]
     fn test_my_simple_activity() {
         // Preparing mock Activity Input
         let activity_input = ActivityInput {
             message: String::from("Test Activity Input"),
+            ..Default::default()
         };
         let res = start_my_simple_activity(&activity_input);
         assert_eq!(
