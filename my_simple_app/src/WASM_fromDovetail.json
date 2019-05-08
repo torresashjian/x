@@ -41,9 +41,9 @@
        "mappings": {
         "input": [
             {
-                "mapTo": "$INPUT['test_flow_output']",
+                "mapTo": "$INPUT['message']",
                 "type": "expression",
-                "value": "$activity[LogMessage].message"
+                "value": "$activity[my_simple_activity].message"
             }
         ]
        }
