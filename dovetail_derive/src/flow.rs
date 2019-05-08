@@ -225,6 +225,7 @@ fn add_flow_input_struct(flow_config: &FlowConfig) -> Context {
 
     let input_attrs = create_flow_input_attrs(flow_config);
     let input_struct = parse_quote! {
+            #[derive(Debug)]
             pub struct FlowInput {
                 #input_attrs
             }
@@ -260,6 +261,7 @@ fn add_flow_output_struct(flow_config: &FlowConfig) -> Context {
 
     let output_attrs = create_flow_output_attrs(flow_config);
     let output_struct = parse_quote! {
+            #[derive(Debug)]
             pub struct FlowOutput {
                 #output_attrs
             }

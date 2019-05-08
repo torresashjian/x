@@ -5,4 +5,4 @@ authors = ["Miguel Torres <migueltorreslopez@gmail.com>"]
 
 [dependencies]
 my_simple_trigger = { path = "../my_simple_trigger" }
-data = { path = "../core_runtime/data" }
+#data = { path = "../core_runtime/data" }

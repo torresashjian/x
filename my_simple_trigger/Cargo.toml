@@ -6,6 +6,6 @@ edition = "2018"
 
 
 [dependencies]
-dovetail_trigger_macro_derive = { path = "../dovetail_trigger_macro_derive" }
-data = { path = "../core_runtime/data" }
+#dovetail_derive = { path = "../dovetail_derive" }
+#data = { path = "../core_runtime/data" }
 my_simple_flow = { path = "../my_simple_flow" }

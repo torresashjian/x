@@ -16,8 +16,46 @@ pub struct Config {
     pub typ: String,
     pub version: String,
     pub description: String,
-    pub triggers: Vec<trigger::config::Config>,
+    pub triggers: Vec<Trigger>,
     pub resources: Vec<Resource>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Trigger {
+    pub id: String,
+    #[serde(rename = "ref")]
+    pub reference: String,
+    #[serde(default)]
+    pub settings: serde_json::map::Map<String, Value>,
+    pub handlers: Vec<Handler>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Handler {
+    #[serde(default)]
+    pub name: String,
+    #[serde(default)]
+    pub settings: serde_json::map::Map<String, Value>,
+    #[serde(default)]
+    pub actions: Vec<Action>,
+    pub action: Action,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Action {
+    #[serde(default)]
+    pub id: String,
+    #[serde(rename = "ref")]
+    pub reference: String,
+    #[serde(default)]
+    pub settings: serde_json::map::Map<String, Value>,
+    #[serde(rename = "if")]
+    #[serde(default)]
+    pub iff: String,
+    #[serde(default)]
+    pub input: serde_json::map::Map<String, Value>,
+    #[serde(default)]
+    pub output: serde_json::map::Map<String, Value>,
 }
 
 #[derive(Deserialize, Debug)]

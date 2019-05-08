@@ -101,19 +101,16 @@
  ],
  "triggers": [
   {
-   "ref": "github.com/TIBCOSoftware/flogo-contrib/trigger/rest",
-   "name": "ReceiveHTTPMessage",
+   "ref": "github.com/torresashjian/dovetail-rust-lib/my_simple_trigger",
+   "name": "my_simple_trigger",
    "description": "",
    "settings": {
-    "port": 8080
    },
-   "id": "ReceiveHTTPMessage",
+   "id": "my_simple_trigger",
    "handlers": [
     {
      "description": "",
      "settings": {
-      "method": "get",
-      "path": "/test"
      },
      "outputs": {},
      "action": {
@@ -140,74 +137,6 @@
      },
      "reply": {
       "code": "$.test_flow_output",
-      "data": "any"
-     }
-    }
-   ]
-  },
-  {
-   "ref": "git.tibco.com/git/product/ipaas/wi-contrib.git/contributions/General/trigger/timer",
-   "name": "TimerTrigger",
-   "description": "",
-   "settings": {},
-   "id": "TimerTrigger",
-   "handlers": [
-    {
-     "description": "",
-     "settings": {
-      "Repeating": false,
-      "Start Date": "",
-      "Time Interval": 1,
-      "Interval Unit": "Second"
-     },
-     "outputs": {},
-     "action": {
-      "ref": "github.com/TIBCOSoftware/flogo-contrib/action/flow",
-      "data": {
-       "flowURI": "res://flow:wasm"
-      },
-      "mappings": {
-       "input": [],
-       "output": []
-      }
-     }
-    }
-   ]
-  },
-  {
-   "ref": "github.com/TIBCOSoftware/flogo-contrib/trigger/rest",
-   "name": "ReceiveHTTPMessage1",
-   "description": "",
-   "settings": {
-    "port": 8081
-   },
-   "id": "ReceiveHTTPMessage1",
-   "handlers": [
-    {
-     "description": "",
-     "settings": {
-      "method": "get",
-      "path": "/test"
-     },
-     "outputs": {},
-     "action": {
-      "ref": "github.com/TIBCOSoftware/flogo-contrib/action/flow",
-      "data": {
-       "flowURI": "res://flow:wasm"
-      },
-      "mappings": {
-       "input": [
-        {
-         "mapTo": "$INPUT['test_flow_input']",
-         "type": "expression",
-         "value": "$.params.something"
-        }
-       ],
-       "output": []
-      }
-     },
-     "reply": {
-      "code": 200,
       "data": "any"
      }
     }

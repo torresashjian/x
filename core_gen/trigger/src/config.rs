@@ -5,38 +5,42 @@ use serde_json::value::Value;
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
-    pub id: String,
+    pub name: String,
+    #[serde(rename = "type")]
+    pub typ: String,
     #[serde(rename = "ref")]
     pub reference: String,
+    pub version: String,
+    #[serde(default)]
+    pub tittle: String,
+    #[serde(default)]
+    pub description: String,
+    #[serde(default)]
+    pub homepage: String,
     #[serde(default)]
     pub settings: serde_json::map::Map<String, Value>,
-    pub handlers: Vec<Handler>,
+    #[serde(default)]
+    pub output: Vec<DataType>,
+    #[serde(default)]
+    pub reply: Vec<DataType>,
+    pub handler: Vec<Handler>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct DataType {
+    pub name: String,
+    #[serde(rename = "type")]
+    pub typ: String,
+    #[serde(default)]
+    pub value: String,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct Handler {
-    #[serde(default)]
     pub name: String,
+    #[serde(rename = "type")]
+    pub typ: String,
+    pub required: bool,
     #[serde(default)]
-    pub settings: serde_json::map::Map<String, Value>,
-    #[serde(default)]
-    pub actions: Vec<Action>,
-    pub action: Action,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct Action {
-    #[serde(default)]
-    pub id: String,
-    #[serde(rename = "ref")]
-    pub reference: String,
-    #[serde(default)]
-    pub settings: serde_json::map::Map<String, Value>,
-    #[serde(rename = "if")]
-    #[serde(default)]
-    pub iff: String,
-    #[serde(default)]
-    pub input: serde_json::map::Map<String, Value>,
-    #[serde(default)]
-    pub output: serde_json::map::Map<String, Value>,
+    pub allowed: Vec<String>,
 }

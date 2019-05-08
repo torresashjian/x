@@ -1,6 +1,4 @@
 // Generated Code
-//extern crate dovetail_flow_macro_derive;
-// Generated Code
 use dovetail_derive::flow;
 
 // Generated Code
@@ -28,7 +26,7 @@ pub fn my_test_call(my_test: MyTest){
 }*/
 
 //ALL Generated Code
-pub mod Wasm2 {
+/*pub mod Wasm2 {
     pub struct FlowInput {
         pub test_flow_input: String,
     }
@@ -123,7 +121,7 @@ pub mod Wasm2 {
             assert_eq!("Logging the message Test Flow Input", res.unwrap().test_flow_output);
         }
     }*/
-}
+}*/
 
 #[cfg(test)]
 mod tests {

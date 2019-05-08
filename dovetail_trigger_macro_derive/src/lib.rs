@@ -1,7 +1,7 @@
 // Copyright © 2019. TIBCO Software Inc.
 // This file is subject to the license terms contained
 // in the license file that is distributed with this file.
-extern crate proc_macro;
+/*extern crate proc_macro;
 extern crate proc_macro2;
 extern crate serde;
 extern crate serde_json;
@@ -301,4 +301,4 @@ mod tests {
     fn it_works() {
         assert_eq!(2 + 2, 4);
     }
-}
+}*/

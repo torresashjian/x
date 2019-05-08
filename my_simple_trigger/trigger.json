@@ -6,15 +6,10 @@
   "title": "Simple trigger",
   "description": "Simple Trigger",
   "settings": [
-    {
-      "name": "port",
-      "type": "integer",
-      "required": true
-    }
   ],
   "output": [
     {
-      "name": "body",
+      "name": "name",
       "type": "string"
     }
   ],
@@ -26,12 +21,6 @@
   ],
   "handler": {
     "settings": [
-      {
-        "name": "method",
-        "type": "string",
-        "required" : true,
-        "allowed" : ["GET", "POST", "PUT", "PATCH", "DELETE"]
-      }
     ]
   }
 }

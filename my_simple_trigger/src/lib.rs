@@ -1,11 +1,8 @@
-
 // Developer Code
-extern crate dovetail_trigger_macro_derive;
-// Developer Code
-use dovetail_trigger_macro_derive::DovetailTrigger;
+//use dovetail_derive::trigger;
 
 // Generated Code
-use my_simple_flow::Wasm::{start_Wasm, FlowInput, FlowOutput};
+use my_simple_flow::Wasm::{start_Wasm, FlowInput};
 
 /*
 // Developer Code
@@ -46,15 +43,29 @@ impl MyTriggerImpl for MyTriggerTrait {
 }
 */
 
+// Developer code
+#[derive(Debug)]
+pub struct TriggerInput{
+    pub name: String,
+}
+
+// Generated code
+#[derive(Debug)]
+pub struct TriggerReply {
+
+}
+
 // Generated Code ENPOINT OPTION 2
 #[no_mangle]
-pub fn Wasm(body: String) -> String {
+//#[triggger()]
+pub fn start_my_simple_trigger(trigger_input: &TriggerInput) -> Result<TriggerReply, String>  {
   println!("Started trigger...");
-  println!("Input param outputBody found: {}", body);
+  println!("Trigger Input : {:?}", trigger_input);
   // Construct FlowInput
-  let flow_input = FlowInput{test_flow_input:body};
+  let flow_input = FlowInput{test_flow_input: trigger_input.name.to_owned()};
   // Start flow tasks
   //let _res = start_Wasm(flow_input);
-  let _res = start_Wasm_manual(flow_input);
-  "Wasm trigger finished succesfully".to_string()
+  let res = start_Wasm(&flow_input);
+  println!("Wasm trigger finished succesfully result: {:#?}...", res);
+  Ok(TriggerReply{})
 }
