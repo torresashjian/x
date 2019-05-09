@@ -41,14 +41,14 @@ RUN /root/.cargo/bin/cargo install cargo-deb
 
 COPY . /project
 
-WORKDIR /project
+WORKDIR /project/my_simple_sawtooth_app
 
 RUN /root/.cargo/bin/cargo deb
 
 # -------------=== intkey rust docker build ===-------------
 FROM ubuntu:bionic
 
-COPY --from=intkey-rust-builder /project/target/debian/my_simple_sawtooth_app_*.deb /tmp
+COPY --from=intkey-rust-builder /project/my_simple_sawtooth_app/target/debian/my_simple_sawtooth_app_*.deb /tmp
 
 RUN apt-get update \
  && dpkg -i /tmp/my_simple_sawtooth_app_*.deb || true \

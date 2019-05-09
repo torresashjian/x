@@ -38,9 +38,9 @@ use sawtooth_sdk::processor::TransactionProcessor;
 use handler::IntkeyTransactionHandler;
 
 //Generated code from app.json
-const settings_endpoint_url: &str = "tcp://localhost:4004";
+const SETTINGS_ENDPOINT_URL: &str = "tcp://localhost:4004";
 
-fn start_my_simple_sawtooth_trigger() {
+pub fn start_my_simple_sawtooth_trigger() {
     let matches = clap_app!(intkey =>
         (version: crate_version!())
         (about: "Intkey Transaction Processor (Rust)")
@@ -52,7 +52,7 @@ fn start_my_simple_sawtooth_trigger() {
 
     let endpoint = matches
         .value_of("connect")
-        .unwrap_or(settings_endpoint_url);
+        .unwrap_or(SETTINGS_ENDPOINT_URL);
 
     let console_log_level;
     match matches.occurrences_of("verbose") {

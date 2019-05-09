@@ -12,4 +12,4 @@ name = "my_simple_sawtooth_app"
 path = "src/main.rs"
 
 [dependencies]
-my_simple_trigger = { path = "../my_simple_sawtooth_trigger" }
+my_simple_sawtooth_trigger = { path = "../my_simple_sawtooth_trigger" }
