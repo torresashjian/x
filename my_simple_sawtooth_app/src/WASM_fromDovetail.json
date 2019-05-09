@@ -1,0 +1,114 @@
+{
+ "name": "WASM",
+ "description": " ",
+ "version": "1.0.0",
+ "type": "flogo:app",
+ "appModel": "1.0.0",
+ "resources": [
+  {
+   "id": "flow:Wasm",
+   "data": {
+    "name": "Wasm",
+    "description": "",
+    "tasks": [
+     {
+      "id": "my_simple_activity",
+      "name": "Logger",
+      "activity": {
+       "ref": "github.com/torresashjian/dovetail-contrib/Ethereum/activity/my_simple_activity",
+       "input": {},
+       "output": {},
+       "mappings": {
+        "input": [
+         {
+          "mapTo": "$INPUT['message']",
+          "type": "assign",
+          "value": "$flow.test_flow_input"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "id": "my_simple_activity_return",
+      "name": "my_simple_activity_return",
+      "activity": {
+       "ref": "github.com/torresashjian/dovetail-contrib/SmartContract/activity/txnreply",
+       "input": {
+        "status": "Success with Data"
+       },
+       "output": {},
+       "mappings": {
+        "input": [
+            {
+                "mapTo": "$INPUT['message']",
+                "type": "expression",
+                "value": "$activity[my_simple_activity].message"
+            }
+        ]
+       }
+      }
+     }
+    ],
+    "links": [
+     {
+      "id": 1,
+      "from": "my_simple_activity",
+      "to": "my_simple_activity_return",
+      "type": "default"
+     }
+    ],
+    "metadata": {
+        "input": [
+         {
+          "name": "test_flow_input",
+          "type": "string"
+         }
+        ],
+        "output": [
+         {
+          "name": "test_flow_output",
+          "type": "string"
+         }
+        ]
+    }
+   }
+  }
+ ],
+ "triggers": [
+  {
+   "ref": "github.com/torresashjian/dovetail-contrib/Ethereum/trigger/ethcontract",
+   "name": "EthereumSmartContract",
+   "description": "",
+   "settings": {},
+   "id": "EthereumSmartContract",
+   "handlers": [
+    {
+     "description": "",
+     "settings": {
+      "OutputValidation": false
+     },
+     "outputs": {
+      "body": {
+       "metadata": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"}}}",
+       "value": ""
+      }
+     },
+     "action": {
+      "ref": "github.com/TIBCOSoftware/flogo-contrib/action/flow",
+      "data": {
+       "flowURI": "res://flow:Wasm"
+      },
+      "mappings": {
+       "input": [],
+       "output": []
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "properties": [],
+ "ui": "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",
+ "contrib": "W3sicmVmIjoiZ2l0aHViLmMiLCJzM2xvY2F0aW9uIjoie1VTRVJJRH0vRXRoZXJldW0ifSx7InJlZiI6ImdpdGh1Yi5jb20vVElCQ09Tb2Z0d2FyZS9kb3ZldGFpbC1jb250cmliL1NtYXJ0Q29udHJhY3QiLCJzM2xvY2F0aW9uIjoie1VTRVJJRH0vU21hcnRDb250cmFjdCJ9LHsicmVmIjoiZ2l0aHViLmNvbS9USUJDT1NvZnR3YXJlL2RvdmV0YWlsLWNvbnRyaWIvRXRoZXJldW0iLCJzM2xvY2F0aW9uIjoie1VTRVJJRH0vRXRoZXJldW0ifV0="
+}

@@ -1,0 +1,16 @@
+[package]
+name = "my_simple_sawtooth_trigger"
+version = "0.0.1"
+authors = [ "user <myemail@email.com>" ]
+edition = "2018"
+
+
+[dependencies]
+#dovetail_derive = { path = "../dovetail_derive" }
+my_simple_flow = { path = "../my_simple_flow" }
+sawtooth-sdk = { git = "https://github.com/hyperledger/sawtooth-sdk-rust"}
+rust-crypto = "0.2"
+clap = "2"
+log = "0.4"
+log4rs = "0.8"
+cbor-codec = "0.7"

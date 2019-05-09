@@ -1,0 +1,11 @@
+[[package]]
+name = "wasm"
+version = "0.0.1"
+dependencies = [
+ "wasmdep 0.0.1",
+]
+
+[[package]]
+name = "wasmdep"
+version = "0.0.1"
+

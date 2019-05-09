@@ -1,0 +1,15 @@
+[package]
+name = "my_simple_sawtooth_app"
+version = "0.1.0"
+authors = ["Miguel Torres <migueltorreslopez@gmail.com>"]
+
+[lib]
+name = "my_simple_sawtooth_app"
+path = "src/lib.rs"
+
+[[bin]]
+name = "my_simple_sawtooth_app"
+path = "src/main.rs"
+
+[dependencies]
+my_simple_trigger = { path = "../my_simple_sawtooth_trigger" }
