@@ -9,18 +9,18 @@ extern crate quote;
 
 use proc_macro::TokenStream;
 
-mod app;
+//mod app;
 mod activity;
 mod environment;
 mod flow;
 mod internals;
 
-#[proc_macro_attribute]
+/*#[proc_macro_attribute]
 pub fn app(attr: TokenStream, input: TokenStream) -> TokenStream {
     app::expand_app(attr, input)
         .unwrap_or_else(to_compile_errors)
         .into()
-}
+}*/
 
 #[proc_macro_attribute]
 pub fn activity(attr: TokenStream, input: TokenStream) -> TokenStream {
@@ -148,10 +148,10 @@ fn get_path(ast : &syn::DeriveInput) -> Option<String> {
 
 }*/
 
-#[cfg(test)]
+/*#[cfg(test)]
 mod tests {
     #[test]
     fn it_works() {
         assert_eq!(2 + 2, 4);
     }
-}
+}*/

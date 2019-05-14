@@ -8,6 +8,9 @@ edition = "2018"
 proc-macro = true
 
 [dependencies]
+app = { git = "http://github.com/torresashjian/dovetail-contrib", branch = "issue-41/sawtooth-contrib" }
+activity = { git = "http://github.com/torresashjian/dovetail-contrib", branch = "issue-41/sawtooth-contrib" }
+flow = { git = "http://github.com/torresashjian/dovetail-contrib", branch = "issue-41/sawtooth-contrib" }
 syn = "0.15"
 quote = "0.6.3"
 serde_json = "1.0"
@@ -15,8 +18,4 @@ serde_derive = "1.0"
 serde = "1.0"
 proc-macro2 = "0.4.27"
 darling_core="0.9.0"
-app = { path = "../core_gen/app" }
-activity = { path = "../core_gen/activity" }
-dovetail_trigger_macro_derive = { path = "../dovetail_trigger_macro_derive" }
-flow = { path = "../core_gen/flow" }
 petgraph = "0.4.13"

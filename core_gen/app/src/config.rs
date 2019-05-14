@@ -5,7 +5,6 @@ extern crate serde;
 extern crate serde_json;
 
 use serde_json::value::Value;
-use trigger;
 
 use crate::id::{parse_id, IdParser};
 
