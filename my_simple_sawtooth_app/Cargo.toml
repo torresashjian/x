@@ -12,4 +12,8 @@ name = "my_simple_sawtooth_app"
 path = "src/main.rs"
 
 [dependencies]
-my_simple_sawtooth_trigger = { path = "../my_simple_sawtooth_trigger" }
+#dovetail_derive = { path = "../dovetail_derive" }
+#my_simple_sawtooth_trigger = { git = "https://github.com/torresashjian/dovetail-contrib", branch = "issue-41/sawtooth-contrib" }
+#my_simple_trigger = { path = "../my_simple_trigger" }
+my_simple_flow = { path = "../my_simple_flow" }
+

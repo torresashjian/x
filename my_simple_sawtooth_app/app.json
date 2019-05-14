@@ -1,5 +1,5 @@
 {
- "name": "WASM",
+ "name": "sawtooth_intkey",
  "description": " ",
  "version": "1.0.0",
  "type": "flogo:app",
@@ -12,59 +12,79 @@
     "description": "",
     "tasks": [
      {
-      "id": "Logger",
+      "id": "my_simple_activity",
       "name": "Logger",
       "activity": {
-       "ref": "github.com/torresashjian/dovetail-contrib/Ethereum/activity/logger",
-       "input": {
-        "logLevel": "INFO"
-       },
+       "ref": "github.com/torresashjian/dovetail-rust-lib/my_simple_activity",
+       "input": {},
        "output": {},
        "mappings": {
         "input": [
          {
           "mapTo": "$INPUT['message']",
           "type": "assign",
-          "value": "$flow.body.name"
+          "value": "$flow.test_flow_input"
          }
         ]
        }
       }
      },
      {
-      "id": "TransactionResponse",
-      "name": "TransactionResponse",
+      "id": "my_simple_activity_return",
+      "name": "my_simple_activity_return",
       "activity": {
-       "ref": "github.com/torresashjian/dovetail-contrib/SmartContract/activity/txnreply",
+       "ref": "github.com/torresashjian/dovetail-rust-lib/my_simple_activity_return",
        "input": {
         "status": "Success with Data"
        },
-       "output": {}
+       "output": {},
+       "mappings": {
+        "input": [
+            {
+                "mapTo": "$INPUT['message']",
+                "type": "expression",
+                "value": "$activity[my_simple_activity].message"
+            }
+        ]
+       }
       }
      }
     ],
     "links": [
      {
       "id": 1,
-      "from": "Logger",
-      "to": "TransactionResponse",
+      "from": "my_simple_activity",
+      "to": "my_simple_activity_return",
       "type": "default"
      }
     ],
     "metadata": {
-     "input": [],
-     "output": []
+        "input": [
+         {
+          "name": "test_flow_input",
+          "type": "string"
+         }
+        ],
+        "output": [
+         {
+          "name": "test_flow_output",
+          "type": "string"
+         }
+        ]
     }
    }
   }
  ],
  "triggers": [
   {
-   "ref": "github.com/torresashjian/dovetail-contrib/Ethereum/trigger/ethcontract",
-   "name": "EthereumSmartContract",
+   "ref": "https://github.com/torresashjian/dovetail-contrib/trigger/my_simple_sawtooth_trigger",
+   "name": "my_simple_sawtooth_trigger",
    "description": "",
-   "settings": {},
-   "id": "EthereumSmartContract",
+   "settings": {
+        "validator_url": "tcp://localhost:4004",
+        "family_name": "intkey"
+    },
+   "id": "my_simple_sawtooth_trigger",
    "handlers": [
     {
      "description": "",
@@ -72,13 +92,13 @@
       "OutputValidation": false
      },
      "outputs": {
-      "body": {
-       "metadata": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"}}}",
+      "payload": {
+       "metadata": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"verb\":{\"type\":\"string\"}}}",
        "value": ""
       }
      },
      "action": {
-      "ref": "github.com/TIBCOSoftware/flogo-contrib/action/flow",
+      "ref": "github.com/torresashjian/dovetail-rust-lib/my_simple_flow",
       "data": {
        "flowURI": "res://flow:Wasm"
       },

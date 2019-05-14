@@ -15,7 +15,7 @@
       "id": "my_simple_activity",
       "name": "Logger",
       "activity": {
-       "ref": "github.com/torresashjian/dovetail-contrib/Ethereum/activity/my_simple_activity",
+       "ref": "github.com/torresashjian/dovetail-rust-lib/my_simple_activity",
        "input": {},
        "output": {},
        "mappings": {
@@ -33,7 +33,7 @@
       "id": "my_simple_activity_return",
       "name": "my_simple_activity_return",
       "activity": {
-       "ref": "github.com/torresashjian/dovetail-contrib/SmartContract/activity/txnreply",
+       "ref": "github.com/torresashjian/dovetail-rust-lib/my_simple_activity_return",
        "input": {
         "status": "Success with Data"
        },
@@ -77,42 +77,12 @@
  ],
  "triggers": [
   {
-   "ref": "github.com/torresashjian/dovetail-contrib/Ethereum/trigger/ethcontract",
-   "name": "EthereumSmartContract",
-   "description": "",
-   "settings": {},
-   "id": "EthereumSmartContract",
-   "handlers": [
-    {
-     "description": "",
-     "settings": {
-      "OutputValidation": false
-     },
-     "outputs": {
-      "body": {
-       "metadata": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"}}}",
-       "value": ""
-      }
-     },
-     "action": {
-      "ref": "github.com/TIBCOSoftware/flogo-contrib/action/flow",
-      "data": {
-       "flowURI": "res://flow:Wasm"
-      },
-      "mappings": {
-       "input": [],
-       "output": []
-      }
-     }
-    }
-   ]
-  },
-  {
-   "ref": "github.com/torresashjian/dovetail-rust-lib/my_simple_sawtooth_trigger",
+   "ref": "https://github.com/torresashjian/dovetail-contrib/trigger/my_simple_sawtooth_trigger",
    "name": "my_simple_sawtooth_trigger",
    "description": "",
    "settings": {
-        "endpoint_url": "tcp://localhost:4004"
+        "validator_url": "tcp://localhost:4004",
+        "family_name": "intkey"
     },
    "id": "my_simple_sawtooth_trigger",
    "handlers": [
@@ -122,8 +92,8 @@
       "OutputValidation": false
      },
      "outputs": {
-      "body": {
-       "metadata": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"}}}",
+      "payload": {
+       "metadata": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"verb\":{\"type\":\"string\"}}}",
        "value": ""
       }
      },

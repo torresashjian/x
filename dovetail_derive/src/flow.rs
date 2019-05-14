@@ -12,8 +12,6 @@ use app::types::AllTypes;
 use flow::config::Config as FlowConfig;
 use flow::config::Data as FlowData;
 use flow::config::{Link, Task};
-//use petgraph::dot::Config as GraphConfig;
-//use petgraph::dot::Dot;
 use petgraph::Graph;
 use petgraph::graph::NodeIndex;
 use petgraph::visit::Bfs;
@@ -39,11 +37,6 @@ pub fn expand_flow(
 
     let mut contxt = Context::new();
 
-    println!(
-        "Looking for app configuration at '{}'",
-        environment::APP_CONFIG_PATH_KEY
-    );
-
     let app_config_path_res = environment::get_app_config_path();
 
     let app_config_path = match app_config_path_res {
@@ -55,7 +48,7 @@ pub fn expand_flow(
         }
     };
 
-    println!("App configuration found...");
+    println!("App configuration found at {}", &app_config_path);
 
     // Read app_config from path
     let app_config = read_app_config(&app_config_path);

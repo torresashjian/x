@@ -58,7 +58,8 @@ pub struct TriggerReply {
 // Generated Code ENPOINT OPTION 2
 #[no_mangle]
 //#[triggger()]
-pub fn start_my_simple_trigger(trigger_input: &TriggerInput) -> Result<TriggerReply, String>  {
+pub fn start_my_simple_trigger() -> Result<TriggerReply, String>  {
+  let trigger_input: TriggerInput = TriggerInput{name: "My Name".to_string()};
   println!("Started trigger...");
   println!("Trigger Input : {:?}", trigger_input);
   // Construct FlowInput

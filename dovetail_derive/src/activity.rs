@@ -42,7 +42,7 @@ pub fn expand_activity(
     match act_input_res {
         Ok(act_input) => {
             tokens.push(act_input);
-        }
+        },
         Err(why) => {
             let mut errors: Vec<Error> = Vec::new();
             errors.push(Error::new(
@@ -60,7 +60,7 @@ pub fn expand_activity(
     match act_output_res {
         Ok(act_output) => {
             tokens.push(act_output);
-        }
+        },
         Err(why) => {
             let mut errors: Vec<Error> = Vec::new();
             errors.push(Error::new(
