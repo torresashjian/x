@@ -6,7 +6,7 @@ extern crate serde_json;
 
 use serde_json::value::Value;
 
-use crate::id::{parse_id, IdParser};
+use crate::app::id::{parse_id, IdParser};
 
 #[derive(Deserialize, Debug)]
 pub struct Config {

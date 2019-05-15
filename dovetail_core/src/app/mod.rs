@@ -5,9 +5,6 @@ pub mod config;
 pub mod id;
 pub mod types;
 
-#[macro_use]
-extern crate serde_derive;
-
 #[derive(Debug)]
 enum AllTypes {
     TypeAny(bool),

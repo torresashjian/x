@@ -1,25 +1,4 @@
 [[package]]
-name = "activity"
-version = "0.1.0"
-dependencies = [
- "serde 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_derive 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_json 1.0.39 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "app"
-version = "0.1.0"
-dependencies = [
- "proc-macro2 0.4.29 (registry+https://github.com/rust-lang/crates.io-index)",
- "quote 0.6.12 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_derive 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_json 1.0.39 (registry+https://github.com/rust-lang/crates.io-index)",
- "trigger 0.1.0",
-]
-
-[[package]]
 name = "darling_core"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -32,14 +11,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "dovetail_core"
+version = "0.1.0"
+source = "git+http://github.com/torresashjian/x?branch=issue-1/first-app#cd3028bb845145db8a97072d8eef7a3ac9a0574c"
+dependencies = [
+ "proc-macro2 0.4.29 (registry+https://github.com/rust-lang/crates.io-index)",
+ "quote 0.6.12 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde_derive 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde_json 1.0.39 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "dovetail_derive"
 version = "0.1.0"
 dependencies = [
- "activity 0.1.0",
- "app 0.1.0",
  "darling_core 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "dovetail_trigger_macro_derive 0.1.0",
- "flow 0.1.0",
+ "dovetail_core 0.1.0 (git+http://github.com/torresashjian/x?branch=issue-1/first-app)",
  "petgraph 0.4.13 (registry+https://github.com/rust-lang/crates.io-index)",
  "proc-macro2 0.4.29 (registry+https://github.com/rust-lang/crates.io-index)",
  "quote 0.6.12 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -50,32 +38,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "dovetail_trigger_macro_derive"
-version = "0.1.0"
-dependencies = [
- "app 0.1.0",
- "proc-macro2 0.4.29 (registry+https://github.com/rust-lang/crates.io-index)",
- "quote 0.6.12 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_derive 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_json 1.0.39 (registry+https://github.com/rust-lang/crates.io-index)",
- "syn 0.15.33 (registry+https://github.com/rust-lang/crates.io-index)",
- "trigger 0.1.0",
-]
-
-[[package]]
 name = "fixedbitset"
 version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "flow"
-version = "0.1.0"
-dependencies = [
- "serde 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_derive 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_json 1.0.39 (registry+https://github.com/rust-lang/crates.io-index)",
-]
 
 [[package]]
 name = "fnv"
@@ -173,21 +138,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "trigger"
-version = "0.1.0"
-dependencies = [
- "serde 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_derive 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_json 1.0.39 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "unicode-xid"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [metadata]
 "checksum darling_core 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "6afc018370c3bff3eb51f89256a6bdb18b4fdcda72d577982a14954a7a0b402c"
+"checksum dovetail_core 0.1.0 (git+http://github.com/torresashjian/x?branch=issue-1/first-app)" = "<none>"
 "checksum fixedbitset 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)" = "86d4de0081402f5e88cdac65c8dcdcc73118c1a7a465e2a05f0da05843a8ea33"
 "checksum fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)" = "2fad85553e09a6f881f739c29f0b00b0f01357c743266d478b68951ce23285f3"
 "checksum ident_case 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)" = "b9e0384b61958566e926dc50660321d12159025e767c18e043daf26b70104c39"
