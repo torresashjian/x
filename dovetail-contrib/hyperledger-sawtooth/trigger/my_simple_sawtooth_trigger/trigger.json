@@ -1,0 +1,35 @@
+{
+  "name": "my_sawtooth_trigger",
+  "type": "flogo:trigger",
+  "ref": "github.com/torresashjian/dovetail-rust-lib/my_sawtooth_trigger",
+  "version": "0.0.1",
+  "title": "Sawtooth trigger",
+  "description": "Sawtooth Trigger",
+  "settings": [
+    {
+      "name": "validator_url",
+      "type": "string"
+    },
+    {
+      "name": "family_name",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "output": [
+    {
+      "name": "name",
+      "type": "string"
+    }
+  ],
+  "reply": [
+    {
+      "name": "data",
+      "type": "string"
+    }
+  ],
+  "handler": {
+    "settings": [
+    ]
+  }
+}

@@ -1,5 +1,5 @@
 [package]
-name = "activity"
+name = "dovetail_core"
 version = "0.1.0"
 authors = ["torresashjian <migueltorreslopez@gmail.com>"]
 edition = "2018"

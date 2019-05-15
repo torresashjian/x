@@ -3,7 +3,7 @@
 // in the license file that is distributed with this file.
 extern crate serde_json;
 
-use activity::config::{Config, DataType};
+use dovetail_core::activity::config::{Config, DataType};
 use app::types::AllTypes;
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, Span};
