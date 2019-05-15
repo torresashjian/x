@@ -1,14 +1,13 @@
 // Copyright © 2019. TIBCO Software Inc.
 // This file is subject to the license terms contained
 // in the license file that is distributed with this file.
-extern crate app;
 extern crate proc_macro;
 extern crate proc_macro2;
 extern crate serde_json;
 
-use app::config::Config as AppConfig;
-use app::id::IdParser;
-use app::types::AllTypes;
+use dovetail_core::app::config::Config as AppConfig;
+use dovetail_core::app::id::IdParser;
+use dovetail_core::app::types::AllTypes;
 use flow::config::Config as FlowConfig;
 use flow::config::Data as FlowData;
 use flow::config::{Link, Task};

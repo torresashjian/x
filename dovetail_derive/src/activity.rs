@@ -4,7 +4,7 @@
 extern crate serde_json;
 
 use dovetail_core::activity::config::{Config, DataType};
-use app::types::AllTypes;
+use dovetail_core::app::types::AllTypes;
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, Span};
 use quote::quote;

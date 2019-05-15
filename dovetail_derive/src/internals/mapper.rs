@@ -4,7 +4,7 @@
 extern crate proc_macro2;
 
 use syn::Error;
-use flow::config::Mappings;
+use dovetail_core::flow::config::Mappings;
 use std::iter::FromIterator;
 use proc_macro2::{Ident, Span};
 

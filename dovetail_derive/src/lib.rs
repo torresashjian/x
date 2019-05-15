@@ -9,7 +9,6 @@ extern crate quote;
 
 use proc_macro::TokenStream;
 
-//mod app;
 mod activity;
 mod environment;
 mod flow;
