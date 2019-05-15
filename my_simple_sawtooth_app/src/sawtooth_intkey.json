@@ -77,7 +77,7 @@
  ],
  "triggers": [
   {
-   "ref": "https://github.com/torresashjian/dovetail-contrib/trigger/my_simple_sawtooth_trigger",
+   "ref": "https://github.com/torresashjian/x/dovetail-contrib/hyperledger-sawtooth/trigger/my_simple_sawtooth_trigger",
    "name": "my_simple_sawtooth_trigger",
    "description": "",
    "settings": {
@@ -98,7 +98,7 @@
       }
      },
      "action": {
-      "ref": "github.com/torresashjian/dovetail-rust-lib/my_simple_flow",
+      "ref": "github.com/torresashjian/x/my_simple_flow",
       "data": {
        "flowURI": "res://flow:Wasm"
       },
