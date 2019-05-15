@@ -9,8 +9,6 @@ proc-macro = true
 
 [dependencies]
 dovetail_core = { git = "http://github.com/torresashjian/x", branch = "issue-1/first-app" }
-app = { git = "http://github.com/torresashjian/x", branch = "issue-1/first-app" }
-flow = { git = "http://github.com/torresashjian/x", branch = "issue-1/first-app" }
 syn = "0.15"
 quote = "0.6.3"
 serde_json = "1.0"
