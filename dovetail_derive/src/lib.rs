@@ -6,12 +6,16 @@ extern crate proc_macro2;
 
 #[macro_use]
 extern crate quote;
+#[macro_use]
+extern crate syn;
 
 use proc_macro::TokenStream;
+use syn::{DeriveInput};
 
 mod activity;
 mod environment;
 mod flow;
+mod trigger;
 mod internals;
 
 /*#[proc_macro_attribute]
@@ -20,6 +24,14 @@ pub fn app(attr: TokenStream, input: TokenStream) -> TokenStream {
         .unwrap_or_else(to_compile_errors)
         .into()
 }*/
+
+#[proc_macro_attribute]
+pub fn trigger_settings(attr: TokenStream, input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    trigger::expand_trigger_settings(attr, input)
+        .unwrap_or_else(to_compile_errors)
+        .into()
+}
 
 #[proc_macro_attribute]
 pub fn activity(attr: TokenStream, input: TokenStream) -> TokenStream {

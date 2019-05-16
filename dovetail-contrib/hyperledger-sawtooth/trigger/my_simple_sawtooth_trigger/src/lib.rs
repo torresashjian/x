@@ -3,6 +3,7 @@
  * This file is subject to the license terms contained
  * in the license file that is distributed with this file.
  */
+extern crate dovetail_derive;
 extern crate cbor;
 #[macro_use]
 extern crate clap;
@@ -14,6 +15,7 @@ extern crate sawtooth_sdk;
 
 mod handler;
 
+use dovetail_derive::trigger_settings;
 use log::LevelFilter;
 use log4rs::append::console::ConsoleAppender;
 use log4rs::config::{Appender, Config, Root};
@@ -28,6 +30,10 @@ use handler::TriggerTransactionHandler;
 //Generated code from app.json
 pub const settings_validator_url: &str = "tcp://localhost:4004";
 pub const settings_family_name: &str = "intkey";
+
+#[trigger_settings()]
+pub struct Settings{}
+
 
 pub fn start_my_simple_sawtooth_trigger() {
     let matches = clap_app!(myapp =>

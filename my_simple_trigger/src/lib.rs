@@ -1,5 +1,5 @@
 // Developer Code
-//use dovetail_derive::trigger;
+use dovetail_derive::trigger_settings;
 
 // Generated Code
 use my_simple_flow::Wasm::{start_Wasm, FlowInput};
@@ -43,6 +43,8 @@ impl MyTriggerImpl for MyTriggerTrait {
 }
 */
 
+
+
 // Developer code
 #[derive(Debug)]
 pub struct TriggerInput{
@@ -53,6 +55,10 @@ pub struct TriggerInput{
 #[derive(Debug)]
 pub struct TriggerReply {
 
+}
+
+#[trigger_settings()]
+pub struct settings {
 }
 
 // Generated Code ENPOINT OPTION 2

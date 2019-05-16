@@ -92,6 +92,7 @@ dependencies = [
 name = "my_simple_trigger"
 version = "0.0.1"
 dependencies = [
+ "dovetail_derive 0.1.0",
  "my_simple_flow 0.0.1",
 ]
 
