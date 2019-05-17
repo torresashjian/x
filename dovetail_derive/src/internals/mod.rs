@@ -6,7 +6,7 @@ pub use self::context::Context;
 pub use self::context::Module;
 pub use self::generator::Generator;
 pub use self::mapper::Mapper;
-pub use self::errors::ErrorFactory;
+pub use self::errors::DoveError;
 
 mod context;
 mod generator;

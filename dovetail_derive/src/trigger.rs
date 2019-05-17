@@ -11,10 +11,10 @@ use quote::quote;
 use std::fs::File;
 use std::io::BufReader;
 use std::iter::FromIterator;
-use syn::{Error, DeriveInput};
+use syn::{Error, DeriveInput, FieldsNamed};
 use syn::Data::Struct;
 
-use crate::internals::{ErrorFactory};
+use crate::internals::{DoveError};
 
 static TRIGGER_CONFIG_PATH: &str = "trigger.json";
 
@@ -24,21 +24,41 @@ pub fn expand_trigger_settings(
 ) -> Result<proc_macro2::TokenStream, Vec<Error>> {
     let mut tokens: Vec<proc_macro2::TokenStream> = Vec::new();
 
+    let fields_named_res = syn::parse_str::<FieldsNamed>("{my_field : String,}");
+    println!("fields_named Result: {:?}", fields_named_res);
+
+    let fields_named = match fields_named_res {
+        Ok(fields_named) => {
+            fields_named
+        },
+        Err(e) => {
+            return Err(DoveError::from(format!("Error parsing trigger settings fields: {:?}", e)).into());
+        }
+    };
+
     // Validate that it is a struct
-    let trigger_settings_data = match input.data {
+    let input_data_struct = match &input.data {
         Struct(data_struct) => {
             data_struct
         },
         _ => {
-            return Err(ErrorFactory::create("trigger_settings should be added to a struct"));
+            return Err(DoveError::from("trigger_settings should be added to a struct".to_string()).into());
         }
     };
 
+    let mut input_copy = input.clone();
+    input_copy.data = syn::Data::Struct(syn::DataStruct{struct_token: input_data_struct.struct_token, fields: syn::Fields::Named(fields_named), semi_token: input_data_struct.semi_token});
 
-    println!(
+    let input_modified = quote!{
+        #input_copy
+    };
+    tokens.push(input_modified);
+
+    /*println!(
         "Found trigger settings data '{:?}'",
-        &trigger_settings_data
-    );
+        input.data
+    );*/
+
     /*println!(
         "Looking for activity configuration at '{}'",
         &ACTIVITY_CONFIG_PATH

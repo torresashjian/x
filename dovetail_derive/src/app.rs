@@ -8,10 +8,10 @@ use std::iter::FromIterator;
 use syn::Error;
 use proc_macro::TokenStream;
 use proc_macro2::{Span};
+use dovetail_core::app::config::Config
 
 use crate::environment;
-
-static APP_CONFIG_PATH: &str = "app.json";
+use crate::internals::{ErrorFactory};
 
 pub fn expand_app(
     _attr: TokenStream,
@@ -52,6 +52,20 @@ pub fn expand_app(
     let res = proc_macro2::TokenStream::from_iter(tokens.into_iter());
     println!("Final App Code: {}", &res.to_string());
     Ok(res)
+}
+
+
+pub fn get_app_config() -> Result<Config, Vec<Error>> {
+    let app_config_path_res = environment::get_app_config_path();
+
+    let app_config_path = match app_config_path_res {
+        Ok(app_config) => app_config,
+        Err(e) => {
+            let mut errors: Vec<syn::Error> = Vec::new();
+            errors.push(e);
+            return Err(errors);
+        }
+    };
 }
 
 /*fn get_app_path(app_config_path: &str) -> Result<String, Error> {

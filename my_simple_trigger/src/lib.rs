@@ -59,6 +59,7 @@ pub struct TriggerReply {
 
 #[trigger_settings()]
 pub struct settings {
+    my_settings_field: String,
 }
 
 // Generated Code ENPOINT OPTION 2
