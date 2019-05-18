@@ -24,6 +24,8 @@ use std::iter::FromIterator;
 
 use syn::{parse_quote, Error};
 
+
+use crate::app::{get_app_config};
 use crate::environment;
 use crate::internals::{Context, Generator, Module, Mapper};
 
@@ -35,22 +37,15 @@ pub fn expand_flow(
 
     let mut contxt = Context::new();
 
-    let app_config_path_res = environment::get_app_config_path();
+    let app_config_res = get_app_config();
 
-    let app_config_path = match app_config_path_res {
+    let app_config = match app_config_res {
         Ok(app_config) => app_config,
         Err(e) => {
-            let mut errors: Vec<syn::Error> = Vec::new();
-            errors.push(e);
-            return Err(errors);
+            return Err(e.into());
         }
     };
-
-    println!("App configuration found at {}", &app_config_path);
-
-    // Read app_config from path
-    let app_config = read_app_config(&app_config_path);
-
+    
     // Get only the flow resources
     let flow_resources: Vec<FlowConfig> = get_flow_resources(&app_config);
 
@@ -66,25 +61,6 @@ pub fn expand_flow(
     Generator::gen(&contxt)
 }
 
-fn read_app_config(app_config_path: &str) -> AppConfig {
-    // Load json file
-    let file = match File::open(&app_config_path) {
-        Err(why) => panic!("couldn't open {}: {:?}", &app_config_path, why),
-        Ok(file) => file,
-    };
-
-    let reader = BufReader::new(file);
-
-    // Read the JSON contents of the file as an instance of `App`.
-    let app_config: AppConfig = match serde_json::from_reader(reader) {
-        // The `description` method of `io::Error` returns a string that
-        // describes the error
-        Err(why) => panic!("Error reading app config file: {:?}", why),
-        Ok(app_config) => app_config,
-    };
-
-    app_config
-}
 
 fn get_flow_resources(app_config: &AppConfig) -> Vec<FlowConfig> {
     let mut flow_resources: Vec<FlowConfig> = Vec::new();

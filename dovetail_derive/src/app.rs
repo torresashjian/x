@@ -3,15 +3,17 @@
 // in the license file that is distributed with this file.
 use std::env;
 use std::fs;
+use std::fs::File;
+use std::io::BufReader;
 use std::path::Path;
 use std::iter::FromIterator;
 use syn::Error;
 use proc_macro::TokenStream;
 use proc_macro2::{Span};
-use dovetail_core::app::config::Config
+use dovetail_core::app::config::Config;
 
 use crate::environment;
-use crate::internals::{ErrorFactory};
+use crate::internals::{DoveError};
 
 pub fn expand_app(
     _attr: TokenStream,
@@ -20,34 +22,6 @@ pub fn expand_app(
     let mut tokens: Vec<proc_macro2::TokenStream> = Vec::new();
     let mut errs: Vec<Error> = Vec::new();
 
-    /*println!(
-        "Looking for app configuration at '{}'",
-        &APP_CONFIG_PATH
-    );
-
-    let app_config_path = get_app_path(&APP_CONFIG_PATH);
-
-    let app_config_path_string = match app_config_path {
-        Ok(app_config_path_string) => app_config_path_string,
-        Err(e) => {
-            errs.push(e);
-            return Err(errs);
-        }
-    };
-
-    println!(
-        "Found '{}' at path {}",
-        &APP_CONFIG_PATH, &app_config_path_string
-    );
-
-    //Add app path to environment
-    env::set_var(environment::APP_CONFIG_PATH_KEY, &app_config_path_string);
-
-    println!(
-        "Variable  '{}' set with value {}",
-        environment::APP_CONFIG_PATH_KEY, &app_config_path_string
-    );*/
-
     tokens.push(proc_macro2::TokenStream::from(input));
     let res = proc_macro2::TokenStream::from_iter(tokens.into_iter());
     println!("Final App Code: {}", &res.to_string());
@@ -55,52 +29,34 @@ pub fn expand_app(
 }
 
 
-pub fn get_app_config() -> Result<Config, Vec<Error>> {
+pub fn get_app_config() -> Result<Config, DoveError> {
     let app_config_path_res = environment::get_app_config_path();
 
     let app_config_path = match app_config_path_res {
-        Ok(app_config) => app_config,
+        Ok(app_config_path) => app_config_path,
         Err(e) => {
-            let mut errors: Vec<syn::Error> = Vec::new();
-            errors.push(e);
-            return Err(errors);
+            return Err(e);
+        }
+    };
+
+    // Load json file
+    let file = match File::open(&app_config_path) {
+        Ok(file) => file,
+        Err(e) => {
+            return Err(DoveError::from(format!("couldn't open {}: {:?}", &app_config_path, e)));
+        }
+    };
+
+    let reader = BufReader::new(file);
+
+    // Read the JSON contents of the file as an instance of `Config`.
+    match serde_json::from_reader(reader) {
+        Ok(app_config) => { 
+            println!("App configuration found at {}", &app_config_path);
+            return Ok(app_config);
+        },
+        Err(e) => {
+            return Err(DoveError::from(format!("Error reading app config file from {}: {:?}", &app_config_path, e)));
         }
     };
 }
-
-/*fn get_app_path(app_config_path: &str) -> Result<String, Error> {
-    let app_config_path = Path::new(&app_config_path);
-    if !app_config_path.exists() {
-        return Err(Error::new(
-                Span::call_site(),
-                format!("couldn't find {:?}", &app_config_path),
-            ));
-    }
-
-    let absolute_path = fs::canonicalize(app_config_path);
-
-    let os_app_config_path = match absolute_path {
-        Ok(absolute_pathbuf) => {
-            absolute_pathbuf.into_os_string()
-        },
-        Err(e) => {
-            return Err(Error::new(
-                Span::call_site(),
-                format!("couldn't canonicalize path {:?}, err: {:?}", &app_config_path, e),
-            ));
-        }
-    };
-
-
-    match os_app_config_path.into_string() {
-        Ok(app_config_path_string) => {
-            return Ok(app_config_path_string); 
-        },
-        Err(e) => {
-            return Err(Error::new(
-                Span::call_site(),
-                format!("couldn't convert path to osstring {:?}, err: {:?}", &app_config_path, e),
-            ));
-        }
-    };
-}*/

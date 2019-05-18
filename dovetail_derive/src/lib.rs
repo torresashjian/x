@@ -13,6 +13,7 @@ use proc_macro::TokenStream;
 use syn::{DeriveInput};
 
 mod activity;
+mod app;
 mod environment;
 mod flow;
 mod trigger;

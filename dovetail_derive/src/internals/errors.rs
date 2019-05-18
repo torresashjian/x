@@ -36,14 +36,3 @@ impl From<DoveError> for Vec<Error> {
         }
     }
 }
-
-/*pub struct ErrorFactory {}
-
-impl ErrorFactory {
-    pub fn create(message: &str) -> Vec<Error> {
-        return vec![Error::new(
-            Span::call_site(),
-            message,
-        )];
-    }
-}*/
