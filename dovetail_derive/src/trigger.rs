@@ -52,7 +52,7 @@ pub fn expand_trigger_settings(
             return Err(e.into());
         }
     };
-
+    
     println!("Found trigger app config: {:?}", &trigger_app_config);
     /*let fields_named_res = syn::parse_str::<FieldsNamed>("{my_field : String,}");
     println!("fields_named Result: {:?}", fields_named_res);
