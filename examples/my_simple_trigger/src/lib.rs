@@ -3,29 +3,34 @@ use dovetail_derive::trigger_settings;
 
 #[trigger_settings()]
 struct Settings {
-  setting_foo: String,
-  setting_bar: String,
+    setting_foo: String,
+    setting_bar: String,
 }
 
 impl Settings {
-  fn from_app() -> Settings {
-      Settings{..Default::default()}
-  }
+    fn from_app() -> Settings {
+        Settings {
+            ..Default::default()
+        }
+    }
 }
 
 impl Default for Settings {
-    fn default() -> Self { 
-      Settings{
-        setting_foo: "default setting name here!!".to_string(),
-        setting_bar: Default::default(),
-      }
+    fn default() -> Self {
+        Settings {
+            setting_foo: "default setting name here!!".to_string(),
+            setting_bar: Default::default(),
+        }
     }
 }
 
 pub fn start_my_simple_trigger() {
     println!("Started trigger my_simple_trigger...");
     let settings = Settings::from_app();
-    assert_eq!("default setting name here!!".to_string(), settings.setting_foo);
+    assert_eq!(
+        "default setting name here!!".to_string(),
+        settings.setting_foo
+    );
 }
 /*
 // Generated Code

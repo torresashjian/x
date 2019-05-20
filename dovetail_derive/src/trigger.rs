@@ -3,16 +3,19 @@
 // in the license file that is distributed with this file.
 extern crate serde_json;
 
-use dovetail_core::trigger::config::{Config};
+use dovetail_core::app::config::Config as AppConfig;
+use dovetail_core::app::config::Trigger as TriggerAppConfig;
+use dovetail_core::trigger::config::Config as TriggerConfig;
 use proc_macro::TokenStream;
 use quote::quote;
 use std::fs::File;
 use std::io::BufReader;
 use std::iter::FromIterator;
-use syn::{Error, DeriveInput};
+use syn::{DeriveInput, Error};
 
+use crate::app::get_app_config;
 use crate::environment;
-use crate::internals::{DoveError};
+use crate::internals::DoveError;
 
 pub fn expand_trigger_settings(
     _attr: TokenStream,
@@ -29,10 +32,28 @@ pub fn expand_trigger_settings(
             return Err(e.into());
         }
     };
- 
-    println!("Trigger configuration found {:?}...", &trigger_config);
-    // Get app config
 
+    // Get app config
+    let app_config_res = get_app_config();
+
+    let app_config = match app_config_res {
+        Ok(app_config) => app_config,
+        Err(e) => {
+            return Err(e.into());
+        }
+    };
+
+    // Find trigger in app config
+    let trigger_app_config_res = get_trigger_app_config(&trigger_config.reference, &app_config);
+
+    let trigger_app_config = match trigger_app_config_res {
+        Ok(trigger_app_config) => trigger_app_config,
+        Err(e) => {
+            return Err(e.into());
+        }
+    };
+
+    println!("Found trigger app config: {:?}", &trigger_app_config);
     /*let fields_named_res = syn::parse_str::<FieldsNamed>("{my_field : String,}");
     println!("fields_named Result: {:?}", fields_named_res);
 
@@ -67,7 +88,6 @@ pub fn expand_trigger_settings(
         "Found trigger settings data '{:?}'",
         input.data
     );*/
-
     /*println!(
         "Looking for activity configuration at '{}'",
         &ACTIVITY_CONFIG_PATH
@@ -120,7 +140,7 @@ pub fn expand_trigger_settings(
     */
     println!("Trigger output data generated succesfully...");*/
 
-    let trigger_settings = quote!{
+    let trigger_settings = quote! {
         #input
     };
     tokens.push(trigger_settings);
@@ -130,8 +150,7 @@ pub fn expand_trigger_settings(
     Ok(res)
 }
 
-
-pub fn get_trigger_config() -> Result<Config, DoveError> {
+pub fn get_trigger_config() -> Result<TriggerConfig, DoveError> {
     let trigger_config_path_res = environment::get_trigger_config_path();
 
     let trigger_config_path = match trigger_config_path_res {
@@ -145,7 +164,10 @@ pub fn get_trigger_config() -> Result<Config, DoveError> {
     let file = match File::open(&trigger_config_path) {
         Ok(file) => file,
         Err(e) => {
-            return Err(DoveError::from(format!("couldn't open {}: {:?}", &trigger_config_path, e)));
+            return Err(DoveError::from(format!(
+                "couldn't open {}: {:?}",
+                &trigger_config_path, e
+            )));
         }
     };
 
@@ -153,14 +175,38 @@ pub fn get_trigger_config() -> Result<Config, DoveError> {
 
     // Read the JSON contents of the file as an instance of `Config`.
     match serde_json::from_reader(reader) {
-        Ok(trigger_config) => { 
+        Ok(trigger_config) => {
             println!("Trigger configuration found at {}", &trigger_config_path);
             return Ok(trigger_config);
-        },
+        }
         Err(e) => {
-            return Err(DoveError::from(format!("Error reading trigger config file from {}: {:?}", &trigger_config_path, e)));
+            return Err(DoveError::from(format!(
+                "Error reading trigger config file from {}: {:?}",
+                &trigger_config_path, e
+            )));
         }
     };
+}
+
+fn get_trigger_app_config<'a>(
+    trigger_ref: &str,
+    app_config: &'a AppConfig,
+) -> Result<&'a TriggerAppConfig, DoveError> {
+    if trigger_ref.is_empty() {
+        return Err(DoveError::from(
+            "Found empty trigger ref in trigger configuration".to_string(),
+        ));
+    }
+    // Iterate through triggers in app_config
+    for trigger in &app_config.triggers {
+        if trigger_ref == trigger.reference {
+            return Ok(trigger);
+        }
+    }
+    Err(DoveError::from(format!(
+        "No trigger with ref '{}' found in your app configuration file",
+        trigger_ref
+    )))
 }
 
 /*fn read_act_config(act_config_path: &str) -> Result<Config, Vec<Error>> {

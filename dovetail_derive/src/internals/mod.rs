@@ -4,11 +4,11 @@
 
 pub use self::context::Context;
 pub use self::context::Module;
+pub use self::errors::DoveError;
 pub use self::generator::Generator;
 pub use self::mapper::Mapper;
-pub use self::errors::DoveError;
 
 mod context;
+mod errors;
 mod generator;
 mod mapper;
-mod errors;

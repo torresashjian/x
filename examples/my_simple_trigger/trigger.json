@@ -1,7 +1,7 @@
 {
   "name": "my_simple_trigger",
   "type": "flogo:trigger",
-  "ref": "github.com/TIBCOSoftware/dovetail-contrib/trigger/my_simple_trigger",
+  "ref": "github.com/torresashjian/x/examples/my_simple_trigger",
   "version": "0.0.1",
   "title": "Simple trigger",
   "description": "Simple Trigger",

@@ -45,46 +45,46 @@ impl AllTypes {
         match &self {
             &AllTypes::TypeAny(name, value) => Err("Unsupported type".to_string()),
             &AllTypes::TypeString(name, value) => {
-							if value.is_empty(){
-								let value_return = quote!{
-									Default::default()
-								};
-								return Ok(value_return);
-							} else {
-								let value_return = quote!{
-									#value.to_string()
-								};
-								return Ok(value_return);
-							}
-						},
+                if value.is_empty() {
+                    let value_return = quote! {
+                        Default::default()
+                    };
+                    return Ok(value_return);
+                } else {
+                    let value_return = quote! {
+                        #value.to_string()
+                    };
+                    return Ok(value_return);
+                }
+            }
             &AllTypes::TypeInteger(name, value) => {
-							if value.is_empty(){
-								let value_return = quote!{
-									Default::default()
-								};
-								return Ok(value_return);
-							} else {
-								let value_integer = value.parse::<u32>().unwrap();
-								let value_return = quote!{
-									#value_integer
-								};
-								return Ok(value_return);
-							}
-						},
+                if value.is_empty() {
+                    let value_return = quote! {
+                        Default::default()
+                    };
+                    return Ok(value_return);
+                } else {
+                    let value_integer = value.parse::<u32>().unwrap();
+                    let value_return = quote! {
+                        #value_integer
+                    };
+                    return Ok(value_return);
+                }
+            }
             &AllTypes::TypeBoolean(name, value) => {
-							if value.is_empty(){
-								let value_return = quote!{
-									Default::default()
-								};
-								return Ok(value_return);
-							} else {
-								let value_bool = value.parse::<bool>().unwrap();
-								let value_return = quote!{
-									#value_bool
-								};
-								return Ok(value_return);
-							}
-						},
+                if value.is_empty() {
+                    let value_return = quote! {
+                        Default::default()
+                    };
+                    return Ok(value_return);
+                } else {
+                    let value_bool = value.parse::<bool>().unwrap();
+                    let value_return = quote! {
+                        #value_bool
+                    };
+                    return Ok(value_return);
+                }
+            }
             _ => Err("Unsupported type".to_string()),
         }
     }

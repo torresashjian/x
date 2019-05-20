@@ -77,11 +77,11 @@
  ],
  "triggers": [
   {
-   "ref": "github.com/torresashjian/dovetail-contrib/Ethereum/trigger/ethcontract",
-   "name": "EthereumSmartContract",
+   "ref": "github.com/torresashjian/x/examples/my_simple_trigger",
+   "name": "my_simple_trigger",
    "description": "",
    "settings": {},
-   "id": "EthereumSmartContract",
+   "id": "my_simple_trigger",
    "handlers": [
     {
      "description": "",

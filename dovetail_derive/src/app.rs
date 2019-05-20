@@ -1,15 +1,12 @@
 // Copyright © 2019. TIBCO Software Inc.
 // This file is subject to the license terms contained
 // in the license file that is distributed with this file.
+use dovetail_core::app::config::Config;
 use std::fs::File;
 use std::io::BufReader;
-use std::iter::FromIterator;
-use syn::Error;
-use proc_macro::TokenStream;
-use dovetail_core::app::config::Config;
 
 use crate::environment;
-use crate::internals::{DoveError};
+use crate::internals::DoveError;
 
 /*pub fn expand_app(
     _attr: TokenStream,
@@ -23,7 +20,6 @@ use crate::internals::{DoveError};
     println!("Final App Code: {}", &res.to_string());
     Ok(res)
 }*/
-
 
 pub fn get_app_config() -> Result<Config, DoveError> {
     let app_config_path_res = environment::get_app_config_path();
@@ -39,7 +35,10 @@ pub fn get_app_config() -> Result<Config, DoveError> {
     let file = match File::open(&app_config_path) {
         Ok(file) => file,
         Err(e) => {
-            return Err(DoveError::from(format!("couldn't open {}: {:?}", &app_config_path, e)));
+            return Err(DoveError::from(format!(
+                "couldn't open {}: {:?}",
+                &app_config_path, e
+            )));
         }
     };
 
@@ -47,12 +46,15 @@ pub fn get_app_config() -> Result<Config, DoveError> {
 
     // Read the JSON contents of the file as an instance of `Config`.
     match serde_json::from_reader(reader) {
-        Ok(app_config) => { 
+        Ok(app_config) => {
             println!("App configuration found at {}", &app_config_path);
             return Ok(app_config);
-        },
+        }
         Err(e) => {
-            return Err(DoveError::from(format!("Error reading app config file from {}: {:?}", &app_config_path, e)));
+            return Err(DoveError::from(format!(
+                "Error reading app config file from {}: {:?}",
+                &app_config_path, e
+            )));
         }
     };
 }

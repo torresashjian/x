@@ -10,14 +10,14 @@ extern crate quote;
 extern crate syn;
 
 use proc_macro::TokenStream;
-use syn::{DeriveInput};
+use syn::DeriveInput;
 
 mod activity;
 mod app;
 mod environment;
 mod flow;
-mod trigger;
 mod internals;
+mod trigger;
 
 /*#[proc_macro_attribute]
 pub fn app(attr: TokenStream, input: TokenStream) -> TokenStream {

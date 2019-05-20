@@ -3,8 +3,9 @@
 // in the license file that is distributed with this file.
 extern crate serde_json;
 
-use dovetail_core::activity::config::{Config, DataType};
+use dovetail_core::activity::config::Config;
 use dovetail_core::app::types::AllTypes;
+use dovetail_core::DataType;
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, Span};
 use quote::quote;
@@ -42,7 +43,7 @@ pub fn expand_activity(
     match act_input_res {
         Ok(act_input) => {
             tokens.push(act_input);
-        },
+        }
         Err(why) => {
             let mut errors: Vec<Error> = Vec::new();
             errors.push(Error::new(
@@ -60,7 +61,7 @@ pub fn expand_activity(
     match act_output_res {
         Ok(act_output) => {
             tokens.push(act_output);
-        },
+        }
         Err(why) => {
             let mut errors: Vec<Error> = Vec::new();
             errors.push(Error::new(
@@ -131,8 +132,11 @@ fn generate_act_input_attrs(act_config: &Config) -> proc_macro2::TokenStream {
     let mut attrs_tokens: Vec<proc_macro2::TokenStream> = Vec::new();
     // Iterate through input attrs
     for input_attr in &act_config.input {
-        let input_type =
-            AllTypes::from_string(input_attr.name.to_owned(), input_attr.typ.to_owned(), input_attr.value.to_owned());
+        let input_type = AllTypes::from_string(
+            input_attr.name.to_owned(),
+            input_attr.typ.to_owned(),
+            input_attr.value.to_owned(),
+        );
         let input_type_name = Ident::new(&input_type.get_name().unwrap(), Span::call_site());
         let input_type_type = Ident::new(&input_type.get_type().unwrap(), Span::call_site());
         attrs_tokens.push(quote! {
@@ -168,7 +172,11 @@ fn generate_act_output_attrs(act_config: &Config) -> proc_macro2::TokenStream {
     let mut attrs_tokens: Vec<proc_macro2::TokenStream> = Vec::new();
     // Iterate through attrs
     for attr in &act_config.output {
-        let typ = AllTypes::from_string(attr.name.to_owned(), attr.typ.to_owned(), attr.value.to_owned());
+        let typ = AllTypes::from_string(
+            attr.name.to_owned(),
+            attr.typ.to_owned(),
+            attr.value.to_owned(),
+        );
         let type_name = Ident::new(&typ.get_name().unwrap(), Span::call_site());
         let type_type = Ident::new(&typ.get_type().unwrap(), Span::call_site());
         attrs_tokens.push(quote! {
@@ -184,7 +192,11 @@ fn generate_default_act_attrs(attrs: &Vec<DataType>) -> proc_macro2::TokenStream
     let mut attrs_tokens: Vec<proc_macro2::TokenStream> = Vec::new();
     // Iterate through attrs
     for attr in attrs {
-        let typ = AllTypes::from_string(attr.name.to_owned(), attr.typ.to_owned(), attr.value.to_owned());
+        let typ = AllTypes::from_string(
+            attr.name.to_owned(),
+            attr.typ.to_owned(),
+            attr.value.to_owned(),
+        );
         let type_name = Ident::new(&typ.get_name().unwrap(), Span::call_site());
         let default_value = &typ.get_value().unwrap();
         attrs_tokens.push(quote! {

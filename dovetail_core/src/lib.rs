@@ -7,7 +7,6 @@ extern crate serde_json;
 extern crate serde_derive;
 extern crate proc_macro2;
 
-
 pub mod activity;
 pub mod app;
 pub mod flow;
@@ -21,4 +20,3 @@ pub struct DataType {
     #[serde(default)]
     pub value: String,
 }
-
