@@ -13,3 +13,12 @@ pub mod app;
 pub mod flow;
 pub mod trigger;
 
+#[derive(Deserialize, Debug)]
+pub struct DataType {
+    pub name: String,
+    #[serde(rename = "type")]
+    pub typ: String,
+    #[serde(default)]
+    pub value: String,
+}
+

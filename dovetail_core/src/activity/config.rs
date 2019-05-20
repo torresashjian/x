@@ -4,6 +4,8 @@
 extern crate serde;
 extern crate serde_json;
 
+use crate::DataType;
+
 #[derive(Deserialize, Debug)]
 pub struct Config {
     pub name: String,
@@ -23,13 +25,4 @@ pub struct Config {
     pub input: Vec<DataType>,
     #[serde(default)]
     pub output: Vec<DataType>,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct DataType {
-    pub name: String,
-    #[serde(rename = "type")]
-    pub typ: String,
-    #[serde(default)]
-    pub value: String,
 }

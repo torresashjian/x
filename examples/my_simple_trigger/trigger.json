@@ -6,6 +6,15 @@
   "title": "Simple trigger",
   "description": "Simple Trigger",
   "settings": [
+    {
+      "name": "setting_foo",
+      "type": "string",
+      "value": "default setting name here!!"
+    },
+    {
+      "name": "setting_bar",
+      "type": "string"
+    }
   ],
   "output": [
     {

@@ -18,8 +18,6 @@ use proc_macro::TokenStream;
 use proc_macro2::{Ident, Span};
 use quote::quote;
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::BufReader;
 use std::iter::FromIterator;
 
 use syn::{parse_quote, Error};

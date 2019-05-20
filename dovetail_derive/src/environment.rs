@@ -2,13 +2,13 @@
 // This file is subject to the license terms contained
 // in the license file that is distributed with this file.
 
-use proc_macro2::Span;
 use std::env;
-use syn::Error;
 use std::path::Path;
 use crate::internals::{DoveError};
 
 static APP_CONFIG_NAME: &str = "app.json";
+static TRIGGER_CONFIG_NAME: &str = "trigger.json";
+
 pub static RESOURCE_FLOW_TYPE: &str = "flow";
 
 pub fn get_app_config_path() -> Result<String, DoveError> {
@@ -36,5 +36,10 @@ pub fn get_app_config_path() -> Result<String, DoveError> {
                 )));
         }
     }
+}
 
+
+pub fn get_trigger_config_path() -> Result<String, DoveError> {
+    // Get trigger config path from environment
+    return Ok(TRIGGER_CONFIG_NAME.to_owned());
 }

@@ -1,5 +1,5 @@
 {
- "name": "WASM",
+ "name": "my_simple_app",
  "description": " ",
  "version": "1.0.0",
  "type": "flogo:app",

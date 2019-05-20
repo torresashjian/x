@@ -3,20 +3,16 @@
 // in the license file that is distributed with this file.
 extern crate serde_json;
 
-use dovetail_core::activity::config::{Config, DataType};
-use dovetail_core::app::types::AllTypes;
+use dovetail_core::trigger::config::{Config};
 use proc_macro::TokenStream;
-use proc_macro2::{Ident, Span};
 use quote::quote;
 use std::fs::File;
 use std::io::BufReader;
 use std::iter::FromIterator;
-use syn::{Error, DeriveInput, FieldsNamed};
-use syn::Data::Struct;
+use syn::{Error, DeriveInput};
 
+use crate::environment;
 use crate::internals::{DoveError};
-
-static TRIGGER_CONFIG_PATH: &str = "trigger.json";
 
 pub fn expand_trigger_settings(
     _attr: TokenStream,
@@ -24,7 +20,20 @@ pub fn expand_trigger_settings(
 ) -> Result<proc_macro2::TokenStream, Vec<Error>> {
     let mut tokens: Vec<proc_macro2::TokenStream> = Vec::new();
 
-    let fields_named_res = syn::parse_str::<FieldsNamed>("{my_field : String,}");
+    // Get trigger config
+    let trigger_config_res = get_trigger_config();
+
+    let trigger_config = match trigger_config_res {
+        Ok(trigger_config) => trigger_config,
+        Err(e) => {
+            return Err(e.into());
+        }
+    };
+ 
+    println!("Trigger configuration found {:?}...", &trigger_config);
+    // Get app config
+
+    /*let fields_named_res = syn::parse_str::<FieldsNamed>("{my_field : String,}");
     println!("fields_named Result: {:?}", fields_named_res);
 
     let fields_named = match fields_named_res {
@@ -109,14 +118,52 @@ pub fn expand_trigger_settings(
         }
     }
     */
-    println!("Trigger output data generated succesfully...");
+    println!("Trigger output data generated succesfully...");*/
+
+    let trigger_settings = quote!{
+        #input
+    };
+    tokens.push(trigger_settings);
 
     let res = proc_macro2::TokenStream::from_iter(tokens.into_iter());
     println!("Final Trigger Code: {}", &res.to_string());
     Ok(res)
 }
 
-fn read_act_config(act_config_path: &str) -> Result<Config, Vec<Error>> {
+
+pub fn get_trigger_config() -> Result<Config, DoveError> {
+    let trigger_config_path_res = environment::get_trigger_config_path();
+
+    let trigger_config_path = match trigger_config_path_res {
+        Ok(trigger_config_path) => trigger_config_path,
+        Err(e) => {
+            return Err(e);
+        }
+    };
+
+    // Load json file
+    let file = match File::open(&trigger_config_path) {
+        Ok(file) => file,
+        Err(e) => {
+            return Err(DoveError::from(format!("couldn't open {}: {:?}", &trigger_config_path, e)));
+        }
+    };
+
+    let reader = BufReader::new(file);
+
+    // Read the JSON contents of the file as an instance of `Config`.
+    match serde_json::from_reader(reader) {
+        Ok(trigger_config) => { 
+            println!("Trigger configuration found at {}", &trigger_config_path);
+            return Ok(trigger_config);
+        },
+        Err(e) => {
+            return Err(DoveError::from(format!("Error reading trigger config file from {}: {:?}", &trigger_config_path, e)));
+        }
+    };
+}
+
+/*fn read_act_config(act_config_path: &str) -> Result<Config, Vec<Error>> {
     // Load json file
     let file = match File::open(&act_config_path) {
         Err(why) => {
@@ -231,3 +278,4 @@ fn generate_default_act_attrs(attrs: &Vec<DataType>) -> proc_macro2::TokenStream
     let attrs = proc_macro2::TokenStream::from_iter(attrs_tokens.into_iter());
     attrs
 }
+*/

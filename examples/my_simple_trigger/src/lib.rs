@@ -1,10 +1,37 @@
 // Developer Code
 use dovetail_derive::trigger_settings;
 
+#[trigger_settings()]
+struct Settings {
+  setting_foo: String,
+  setting_bar: String,
+}
+
+impl Settings {
+  fn from_app() -> Settings {
+      Settings{..Default::default()}
+  }
+}
+
+impl Default for Settings {
+    fn default() -> Self { 
+      Settings{
+        setting_foo: "default setting name here!!".to_string(),
+        setting_bar: Default::default(),
+      }
+    }
+}
+
+pub fn start_my_simple_trigger() {
+    println!("Started trigger my_simple_trigger...");
+    let settings = Settings::from_app();
+    assert_eq!("default setting name here!!".to_string(), settings.setting_foo);
+}
+/*
 // Generated Code
 use my_simple_flow::Wasm::{start_Wasm, FlowInput};
 
-/*
+
 // Developer Code
 #[derive(DovetailTrigger)]
 #[path = "src/WASM_fromDovetail.json"]
@@ -41,7 +68,6 @@ impl MyTriggerImpl for MyTriggerTrait {
       // TODO figure out implementation here
     }
 }
-*/
 
 
 
@@ -77,3 +103,5 @@ pub fn start_my_simple_trigger() -> Result<TriggerReply, String>  {
   println!("Wasm trigger finished succesfully result: {:#?}...", res);
   Ok(TriggerReply{})
 }
+
+*/

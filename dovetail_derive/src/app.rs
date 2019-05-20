@@ -1,21 +1,17 @@
 // Copyright © 2019. TIBCO Software Inc.
 // This file is subject to the license terms contained
 // in the license file that is distributed with this file.
-use std::env;
-use std::fs;
 use std::fs::File;
 use std::io::BufReader;
-use std::path::Path;
 use std::iter::FromIterator;
 use syn::Error;
 use proc_macro::TokenStream;
-use proc_macro2::{Span};
 use dovetail_core::app::config::Config;
 
 use crate::environment;
 use crate::internals::{DoveError};
 
-pub fn expand_app(
+/*pub fn expand_app(
     _attr: TokenStream,
     input: TokenStream,
 ) -> Result<proc_macro2::TokenStream, Vec<Error>> {
@@ -26,7 +22,7 @@ pub fn expand_app(
     let res = proc_macro2::TokenStream::from_iter(tokens.into_iter());
     println!("Final App Code: {}", &res.to_string());
     Ok(res)
-}
+}*/
 
 
 pub fn get_app_config() -> Result<Config, DoveError> {
