@@ -3,8 +3,10 @@
 // in the license file that is distributed with this file.
 use dovetail_core::DataType;
 use std::iter::FromIterator;
-use syn::{DeriveInput, Data, Fields, Field, Token};
-use syn::punctuated::Punctuated;
+use syn::{DeriveInput, Data, Fields, Field, Token, FieldsNamed};
+use syn::Data::Struct;
+use proc_macro2::{Ident, Span};
+use dovetail_core::app::types::AllTypes;
 
 use crate::internals::DoveError;
 
@@ -22,7 +24,7 @@ pub fn expand_struct(
                 pub #input_type_name: #input_type_type,
         });
     }*/
-    let mut input_attrs_stream: Vec<proc_macro2::TokenStream> = Vec::new();
+    /*let mut input_attrs_stream: Vec<proc_macro2::TokenStream> = Vec::new();
     for attr in &input_struct.attrs {
         let input_attr = quote!{
             #attr
@@ -50,18 +52,28 @@ pub fn expand_struct(
     };
 
 
-    let mut new_input_fields: Punctuated<Field, Token![,]> = Punctuated::new();
+    let mut new_input_fields: Vec<proc_macro2::TokenStream> = Vec::new();
 
     let input_fields_named_named = &input_fields_named.named;
     for input_field_named in input_fields_named_named {
-        println!("Input Field Named: {:?}", input_field_named);
-        new_input_fields.push(input_field_named.clone());
+        let input_field_quote = quote! {
+            #input_field_named
+        };
+        new_input_fields.push(input_field_quote);
     }
 
     // Add new fields
     for new_field in new_fields {
-        new_input_fields.push(Field::parse_named());
+        let field_type =
+            AllTypes::from_string(new_field.name.to_owned(), new_field.typ.to_owned(), new_field.value.to_owned());
+        let new_field_name = Ident::new(&field_type.get_name().unwrap(), Span::call_site());
+        let new_field_type_type = Ident::new(&field_type.get_type().unwrap(), Span::call_site());
+        new_input_fields.push(quote! {
+                pub #new_field_name: #new_field_type_type,
+        });
     } 
+
+    let new_input_fields = proc_macro2::TokenStream::from_iter(new_input_fields.into_iter());
 
 
     let input_semi_token = &input_data_struct.semi_token;
@@ -69,10 +81,78 @@ pub fn expand_struct(
     let my_expanded_struct = quote! {
             #input_attrs
             #input_vis #input_struct_token #input_ident #input_generics {
-                #input_fields_named_named
+                #new_input_fields
             }#input_semi_token
     };
-    struct_tokens.push(my_expanded_struct);
+    struct_tokens.push(my_expanded_struct);*/
+
+
+    // Validate that it is a struct
+    let input_data_struct = match &input_struct.data {
+        Struct(data_struct) => {
+            data_struct
+        },
+        _ => {
+            return Err(DoveError::from("trigger_settings should be added to a struct".to_string()).into());
+        }
+    };
+
+    let mut new_input_fields_vec: Vec<proc_macro2::TokenStream> = Vec::new();
+
+        // Add new fields
+    for new_field in new_fields {
+        let field_type =
+            AllTypes::from_string(new_field.name.to_owned(), new_field.typ.to_owned(), new_field.value.to_owned());
+        let new_field_name = Ident::new(&field_type.get_name().unwrap(), Span::call_site());
+        let new_field_type_type = Ident::new(&field_type.get_type().unwrap(), Span::call_site());
+        new_input_fields_vec.push(quote! {
+                pub #new_field_name: #new_field_type_type,
+        });
+    } 
+
+    let new_input_fields = proc_macro2::TokenStream::from_iter(new_input_fields_vec.into_iter());
+
+    // Add old fields
+    let input_fields = &input_data_struct.fields;
+
+    let input_fields_named = match &input_fields{
+       Fields::Named(fields_named) => fields_named,
+        _ => {
+            return Err(DoveError::from("trying to expand a non struct fields".to_string()));
+        }
+    };
+
+
+    let mut old_input_fields_vec: Vec<proc_macro2::TokenStream> = Vec::new();
+
+    let input_fields_named_named = &input_fields_named.named;
+    let input_fields_named_named_pairs = input_fields_named_named.pairs();
+    for input_field_named_pair in input_fields_named_named_pairs {
+        let input_field_quote = quote! {
+            #input_field_named_pair
+        };
+        old_input_fields_vec.push(input_field_quote);
+    }
+
+    let old_input_fields = proc_macro2::TokenStream::from_iter(old_input_fields_vec.into_iter());
+
+    println!("Old Input Fields {:?}", &old_input_fields.to_string());
+
+    // Create the fields named
+    let fields_named: FieldsNamed = parse_quote! {
+        {
+            #new_input_fields
+            #old_input_fields
+        }
+    };
+
+    let mut input_copy = input_struct.clone();
+    input_copy.data = syn::Data::Struct(syn::DataStruct{struct_token: input_data_struct.struct_token, fields: syn::Fields::Named(fields_named), semi_token: input_data_struct.semi_token});
+
+    let input_modified = quote!{
+        #input_copy
+    };
+    struct_tokens.push(input_modified);
 
     let expanded_struct = proc_macro2::TokenStream::from_iter(struct_tokens.into_iter());
     Ok(expanded_struct)
@@ -97,7 +177,7 @@ mod tests {
             }
         };
         // Create a test data type
-        let test_data_type = DataType{name: "my_test_name".to_string(), typ: "String".to_string(), value: "default_val".to_string()};
+        let test_data_type = DataType{name: "my_test_name".to_string(), typ: "string".to_string(), value: "default_val".to_string()};
         // Call expand
         let expand_struct_res = expand_struct(&my_test_struct, vec![test_data_type]);
 
@@ -106,7 +186,9 @@ mod tests {
             Err(e) => panic!("Unable to expand struct, error: {:?}", e)
         };
 
-        let my_expanded_struct: DeriveInput = parse_quote! {
+        println!("Final Struct {:?}", &expand_struct.to_string());
+
+        /*let my_expanded_struct: DeriveInput = parse_quote! {
             #expand_struct
         };
 
@@ -117,6 +199,6 @@ mod tests {
         // Make sure the identifier is the same
         assert_eq!(my_test_struct.ident, my_expanded_struct.ident);
         // Make sure the generics are the same
-        assert_eq!(my_test_struct.generics, my_expanded_struct.generics);
+        assert_eq!(my_test_struct.generics, my_expanded_struct.generics);*/
     }
 }
