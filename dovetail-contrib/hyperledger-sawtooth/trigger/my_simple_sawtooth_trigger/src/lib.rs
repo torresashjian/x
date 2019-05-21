@@ -48,7 +48,7 @@ pub fn start_my_simple_sawtooth_trigger() {
 
     let endpoint = matches
         .value_of("connect")
-        .unwrap_or(settings.validator_url);
+        .unwrap_or(&settings.validator_url);
 
     let console_log_level;
     match matches.occurrences_of("verbose") {

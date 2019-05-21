@@ -239,7 +239,7 @@ pub struct TriggerTransactionHandler {
 impl TriggerTransactionHandler {
     pub fn new(settings: &Settings) -> TriggerTransactionHandler {
         TriggerTransactionHandler {
-            family_name: &settings.family_name.to_owned(),
+            family_name: settings.family_name.to_owned(),
             family_versions: vec!["1.0".to_string()],
             namespaces: vec![get_intkey_prefix().to_string()],
         }
