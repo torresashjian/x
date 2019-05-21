@@ -13,7 +13,7 @@ dependencies = [
 [[package]]
 name = "dovetail_core"
 version = "0.1.0"
-source = "git+http://github.com/torresashjian/x#5f7a36389e2d1167287695c60ba92500b0aa5f41"
+source = "git+http://github.com/torresashjian/x#32d5263b936d9b9eb91168979e7c711c70cd6c65"
 dependencies = [
  "proc-macro2 0.4.30 (registry+https://github.com/rust-lang/crates.io-index)",
  "quote 0.6.12 (registry+https://github.com/rust-lang/crates.io-index)",
