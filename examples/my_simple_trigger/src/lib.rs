@@ -2,14 +2,20 @@
 use dovetail_derive::trigger_settings;
 
 #[trigger_settings()]
-struct Settings {
-    setting_foo: String,
-    setting_bar: String,
-}
+pub struct Settings {
+    /*
+// This is what trigger_settings macro generates
+pub setting_foo: String,
+pub setting_bar: String,
+*/}
 
+/*
+// This is what trigger_settings macro generates
 impl Settings {
-    fn from_app() -> Settings {
+    pub fn from_app() -> Settings {
         Settings {
+            setting_foo: "setting foo changed".to_string(),
+            setting_bar: "setting bar also changed".to_string(),
             ..Default::default()
         }
     }
@@ -23,15 +29,11 @@ impl Default for Settings {
         }
     }
 }
-
+*/
 pub fn start_my_simple_trigger() {
     println!("Started trigger my_simple_trigger...");
-    let settings = Settings::from_app();
-    assert_eq!(
-        "default setting name here!!".to_string(),
-        settings.setting_foo
-    );
 }
+
 /*
 // Generated Code
 use my_simple_flow::Wasm::{start_Wasm, FlowInput};

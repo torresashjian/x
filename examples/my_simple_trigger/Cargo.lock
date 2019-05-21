@@ -13,7 +13,7 @@ dependencies = [
 [[package]]
 name = "dovetail_core"
 version = "0.1.0"
-source = "git+http://github.com/torresashjian/x?branch=issue-1/first-app#44e29bf9d6614e5a2aebdc5ead31e0bdf0e0ad77"
+source = "git+http://github.com/torresashjian/x#15189696b5b312b60ce0596dd1443413b8142122"
 dependencies = [
  "proc-macro2 0.4.30 (registry+https://github.com/rust-lang/crates.io-index)",
  "quote 0.6.12 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -27,7 +27,7 @@ name = "dovetail_derive"
 version = "0.1.0"
 dependencies = [
  "darling_core 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "dovetail_core 0.1.0 (git+http://github.com/torresashjian/x?branch=issue-1/first-app)",
+ "dovetail_core 0.1.0 (git+http://github.com/torresashjian/x)",
  "petgraph 0.4.13 (registry+https://github.com/rust-lang/crates.io-index)",
  "proc-macro2 0.4.30 (registry+https://github.com/rust-lang/crates.io-index)",
  "quote 0.6.12 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -58,34 +58,10 @@ version = "0.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "my_simple_activity"
-version = "0.0.1"
-dependencies = [
- "dovetail_derive 0.1.0",
-]
-
-[[package]]
-name = "my_simple_activity_return"
-version = "0.0.1"
-dependencies = [
- "dovetail_derive 0.1.0",
-]
-
-[[package]]
-name = "my_simple_flow"
-version = "0.0.1"
-dependencies = [
- "dovetail_derive 0.1.0",
- "my_simple_activity 0.0.1",
- "my_simple_activity_return 0.0.1",
- "serde_json 1.0.39 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "my_simple_trigger"
 version = "0.0.1"
 dependencies = [
- "my_simple_flow 0.0.1",
+ "dovetail_derive 0.1.0",
 ]
 
 [[package]]
@@ -168,7 +144,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [metadata]
 "checksum darling_core 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "6afc018370c3bff3eb51f89256a6bdb18b4fdcda72d577982a14954a7a0b402c"
-"checksum dovetail_core 0.1.0 (git+http://github.com/torresashjian/x?branch=issue-1/first-app)" = "<none>"
+"checksum dovetail_core 0.1.0 (git+http://github.com/torresashjian/x)" = "<none>"
 "checksum fixedbitset 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)" = "86d4de0081402f5e88cdac65c8dcdcc73118c1a7a465e2a05f0da05843a8ea33"
 "checksum fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)" = "2fad85553e09a6f881f739c29f0b00b0f01357c743266d478b68951ce23285f3"
 "checksum ident_case 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)" = "b9e0384b61958566e926dc50660321d12159025e767c18e043daf26b70104c39"

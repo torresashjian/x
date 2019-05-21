@@ -80,7 +80,10 @@
    "ref": "github.com/torresashjian/x/examples/my_simple_trigger",
    "name": "my_simple_trigger",
    "description": "",
-   "settings": {},
+   "settings": {
+       "setting_foo": "setting foo changed",
+       "setting_bar": "setting bar also changed"
+   },
    "id": "my_simple_trigger",
    "handlers": [
     {

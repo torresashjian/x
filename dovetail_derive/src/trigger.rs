@@ -16,6 +16,7 @@ use syn::{DeriveInput, Error};
 use crate::app::get_app_config;
 use crate::environment;
 use crate::internals::DoveError;
+use crate::structs;
 
 pub fn expand_trigger_settings(
     _attr: TokenStream,
@@ -52,98 +53,43 @@ pub fn expand_trigger_settings(
             return Err(e.into());
         }
     };
-     
-    println!("Found trigger app config: {:?}", &trigger_app_config);
-    /*let fields_named_res = syn::parse_str::<FieldsNamed>("{my_field : String,}");
-    println!("fields_named Result: {:?}", fields_named_res);
 
-    let fields_named = match fields_named_res {
-        Ok(fields_named) => {
-            fields_named
-        },
+    // Add new fields
+    let expand_fields_res = structs::expand_fields(&input, &trigger_config.settings);
+
+    let trigger_settings = match expand_fields_res {
+        Ok(trigger_settings) => trigger_settings,
         Err(e) => {
-            return Err(DoveError::from(format!("Error parsing trigger settings fields: {:?}", e)).into());
+            return Err(e.into());
         }
-    };
-
-    // Validate that it is a struct
-    let input_data_struct = match &input.data {
-        Struct(data_struct) => {
-            data_struct
-        },
-        _ => {
-            return Err(DoveError::from("trigger_settings should be added to a struct".to_string()).into());
-        }
-    };
-
-    let mut input_copy = input.clone();
-    input_copy.data = syn::Data::Struct(syn::DataStruct{struct_token: input_data_struct.struct_token, fields: syn::Fields::Named(fields_named), semi_token: input_data_struct.semi_token});
-
-    let input_modified = quote!{
-        #input_copy
-    };
-    tokens.push(input_modified);
-
-    /*println!(
-        "Found trigger settings data '{:?}'",
-        input.data
-    );*/
-    /*println!(
-        "Looking for activity configuration at '{}'",
-        &ACTIVITY_CONFIG_PATH
-    );
-
-    let act_config_res = read_act_config(&ACTIVITY_CONFIG_PATH);
-
-    let act_config = match act_config_res {
-        Ok(act_config) => act_config,
-        Err(e) => {
-            return Err(e);
-        }
-    };
-
-    println!("Activity configuration found...");
-
-    let act_input_res = generate_act_input(&act_config);
-
-    match act_input_res {
-        Ok(act_input) => {
-            tokens.push(act_input);
-        },
-        Err(why) => {
-            let mut errors: Vec<Error> = Vec::new();
-            errors.push(Error::new(
-                Span::call_site(),
-                format!("couldn't generate activity input data : {:?}", why),
-            ));
-            return Err(errors);
-        }
-    }
-
-    println!("Activity input data generated succesfully...");
-
-    let act_output_res = generate_act_output(&act_config);
-
-    match act_output_res {
-        Ok(act_output) => {
-            tokens.push(act_output);
-        },
-        Err(why) => {
-            let mut errors: Vec<Error> = Vec::new();
-            errors.push(Error::new(
-                Span::call_site(),
-                format!("couldn't generate activity output data : {:?}", why),
-            ));
-            return Err(errors);
-        }
-    }
-    */
-    println!("Trigger output data generated succesfully...");*/
-
-    let trigger_settings = quote! {
-        #input
     };
     tokens.push(trigger_settings);
+
+    // Add default impl
+    let expand_default_res = structs::expand_default(&input, &trigger_config.settings);
+
+    let trigger_default = match expand_default_res {
+        Ok(trigger_default) => trigger_default,
+        Err(e) => {
+            return Err(e.into());
+        }
+    };
+    tokens.push(trigger_default);
+
+    // Add expand from app impl
+    let expand_from_app_res = structs::expand_from_app(
+        &input,
+        &trigger_app_config.settings,
+        &trigger_config.settings,
+    );
+
+    let trigger_from_app = match expand_from_app_res {
+        Ok(trigger_from_app) => trigger_from_app,
+        Err(e) => {
+            return Err(e.into());
+        }
+    };
+    tokens.push(trigger_from_app);
 
     let res = proc_macro2::TokenStream::from_iter(tokens.into_iter());
     println!("Final Trigger Code: {}", &res.to_string());
