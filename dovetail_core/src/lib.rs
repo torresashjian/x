@@ -21,7 +21,7 @@ pub struct DataType {
     #[serde(default)]
     pub value: String,
 }
-
+ 
 impl From<DataType> for Field {
     fn from(inner: DataType) -> Field {
         let my_field = parse_quote! {
