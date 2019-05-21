@@ -13,13 +13,14 @@ dependencies = [
 [[package]]
 name = "dovetail_core"
 version = "0.1.0"
-source = "git+http://github.com/torresashjian/x#eed8da116bdf4fd84c54f73eaf207734ded50992"
+source = "git+http://github.com/torresashjian/x#5f7a36389e2d1167287695c60ba92500b0aa5f41"
 dependencies = [
  "proc-macro2 0.4.30 (registry+https://github.com/rust-lang/crates.io-index)",
  "quote 0.6.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.91 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.91 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.39 (registry+https://github.com/rust-lang/crates.io-index)",
+ "syn 0.15.34 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

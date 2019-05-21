@@ -10,7 +10,7 @@ extern crate serde_derive;
 #[macro_use]
 extern crate quote;
 
-use syn::{Field};
+use syn::{Field, parse_quote};
 
 pub mod activity;
 pub mod app;
