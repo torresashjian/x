@@ -36,6 +36,7 @@ pub struct Settings{}
 
 
 pub fn start_my_simple_sawtooth_trigger() {
+    let settings = Settings::from_app();
     let matches = clap_app!(myapp =>
         (version: crate_version!())
         (about: "my_simple_sawtooth_trigger Transaction Processor (Rust)")
@@ -47,7 +48,7 @@ pub fn start_my_simple_sawtooth_trigger() {
 
     let endpoint = matches
         .value_of("connect")
-        .unwrap_or(settings_validator_url);
+        .unwrap_or(settings.validator_url);
 
     let console_log_level;
     match matches.occurrences_of("verbose") {
@@ -84,7 +85,7 @@ pub fn start_my_simple_sawtooth_trigger() {
         }
     }
 
-    let handler = TriggerTransactionHandler::new();
+    let handler = TriggerTransactionHandler::new(&settings);
     let mut processor = TransactionProcessor::new(endpoint);
 
     info!("Console logging level: {}", console_log_level);
