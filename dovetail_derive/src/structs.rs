@@ -3,7 +3,8 @@
 // in the license file that is distributed with this file.
 use dovetail_core::DataType;
 use std::iter::FromIterator;
-use syn::{DeriveInput, Data, Fields, Field};
+use syn::{DeriveInput, Data, Fields, Field, Token};
+use syn::punctuated::Punctuated;
 
 use crate::internals::DoveError;
 
@@ -48,17 +49,27 @@ pub fn expand_struct(
         }
     };
 
+
+    let mut new_input_fields: Punctuated<Field, Token![,]> = Punctuated::new();
+
     let input_fields_named_named = &input_fields_named.named;
     for input_field_named in input_fields_named_named {
         println!("Input Field Named: {:?}", input_field_named);
+        new_input_fields.push(input_field_named.clone());
     }
+
+    // Add new fields
+    for new_field in new_fields {
+        new_input_fields.push(new_field.into());
+    } 
+
 
     let input_semi_token = &input_data_struct.semi_token;
 
     let my_expanded_struct = quote! {
             #input_attrs
             #input_vis #input_struct_token #input_ident #input_generics {
-
+                #input_fields_named_named
             }#input_semi_token
     };
     struct_tokens.push(my_expanded_struct);
@@ -72,6 +83,7 @@ mod tests {
     use quote::quote;
     use syn::DeriveInput;
     use proc_macro::TokenStream;
+    use dovetail_core::DataType;
 
     use crate::structs::expand_struct;
     
@@ -84,8 +96,10 @@ mod tests {
                 y: U,
             }
         };
+        // Create a test data type
+        let test_data_type = DataType{name: "my_test_name".to_string(), typ: "String".to_string(), value: "default_val".to_string()};
         // Call expand
-        let expand_struct_res = expand_struct(&my_test_struct, Vec::new());
+        let expand_struct_res = expand_struct(&my_test_struct, vec![test_data_type]);
 
         let expand_struct = match expand_struct_res {
             Ok(expand_struct) => expand_struct,

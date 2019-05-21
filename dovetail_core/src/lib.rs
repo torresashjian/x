@@ -3,9 +3,13 @@
 // in the license file that is distributed with this file.
 extern crate serde;
 extern crate serde_json;
+extern crate proc_macro2;
+
 #[macro_use]
 extern crate serde_derive;
-extern crate proc_macro2;
+#[macro_use]
+extern crate quote;
+
 use syn::{Field};
 
 pub mod activity;
