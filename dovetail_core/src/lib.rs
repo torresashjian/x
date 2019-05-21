@@ -6,6 +6,7 @@ extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
 extern crate proc_macro2;
+use syn::{Field};
 
 pub mod activity;
 pub mod app;
@@ -19,4 +20,13 @@ pub struct DataType {
     pub typ: String,
     #[serde(default)]
     pub value: String,
+}
+
+impl From<DataType> for Field {
+    fn from(inner: DataType) -> Field {
+        let my_field = parse_quote! {
+            my_field: String,
+        };
+        return my_field;
+    }
 }

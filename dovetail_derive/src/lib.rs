@@ -17,6 +17,7 @@ mod app;
 mod environment;
 mod flow;
 mod internals;
+mod structs;
 mod trigger;
 
 /*#[proc_macro_attribute]

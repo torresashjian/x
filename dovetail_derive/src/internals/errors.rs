@@ -4,6 +4,7 @@
 use proc_macro2::Span;
 use syn::Error;
 
+#[derive(Debug)]
 pub enum DoveError {
     StringError(String),
     SynError(Error),

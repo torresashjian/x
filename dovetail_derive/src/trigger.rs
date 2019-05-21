@@ -209,6 +209,26 @@ fn get_trigger_app_config<'a>(
     )))
 }
 
+/*fn generate_trigger_settings(trigger_app_config: &TriggerAppConfig, trigger_config: &TriggerConfig) -> Result<proc_macro2::TokenStream, DoveError> {
+    println!("Generating trigger settings...");
+    let act_attrs = generate_act_input_attrs(&act_config);
+    let default_act_attrs = generate_default_act_attrs(&act_config.input);
+    let act_input = quote! {
+        pub struct ActivityInput {
+            #act_attrs
+        }
+
+        impl Default for ActivityInput {
+            fn default() -> ActivityInput {
+                ActivityInput {
+                    #default_act_attrs
+                }
+            }
+        }
+    };
+    Ok(act_input)
+}*/
+
 /*fn read_act_config(act_config_path: &str) -> Result<Config, Vec<Error>> {
     // Load json file
     let file = match File::open(&act_config_path) {
