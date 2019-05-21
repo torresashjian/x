@@ -60,7 +60,7 @@ pub fn expand_struct(
 
     // Add new fields
     for new_field in new_fields {
-        new_input_fields.push(new_field.into());
+        new_input_fields.push(Field::parse_named());
     } 
 
 

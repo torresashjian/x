@@ -9,8 +9,10 @@ extern crate proc_macro2;
 extern crate serde_derive;
 #[macro_use]
 extern crate quote;
+#[macro_use]
+extern crate syn;
 
-use syn::{Field, parse_quote};
+use syn::{Field, quote};
 
 pub mod activity;
 pub mod app;
@@ -24,4 +26,14 @@ pub struct DataType {
     pub typ: String,
     #[serde(default)]
     pub value: String,
+}
+ 
+impl From<DataType> for Field {
+    fn from(inner: DataType) -> Field {
+        let my_field = quote! {
+            my_field: String,
+        };
+        let input = parse_macro_input!(my_field as Field);
+        return input;
+    }
 }
